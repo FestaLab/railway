@@ -1,0 +1,41 @@
+---
+
+- hosts: _railway_ec2_development_webserver:_railway_ec2_development_worker
+  remote_user: ansible
+  become: yes
+  become_user: app
+  gather_facts: false
+
+  roles:
+    - role: app_deploy
+      param_name: "dev{{ group_id }}"
+      param_branch: "{{ branch | default('master') }}"
+      tags: app_deploy
+
+- hosts: _railway_ec2_development_webserver
+  remote_user: ansible
+  become: yes
+  gather_facts: false
+
+  roles:
+    - role: app_deploy_precompile
+      param_name: "dev{{ group_id }}"
+      tags: app_deploy_precompile
+
+    - role: app_deploy_migrate
+      param_name: "dev{{ group_id }}"
+      tags: app_deploy_migrate
+
+    - role: app_deploy_application_server_restart
+      param_name: "dev{{ group_id }}"
+      tags: app_deploy_application_server_restart
+
+- hosts: _railway_ec2_development_worker
+  remote_user: ansible
+  become: yes
+  gather_facts: false
+
+  roles:
+    - role: app_deploy_worker_server_restart
+      param_name: "dev{{ group_id }}"
+      tags: app_deploy_worker_server_restart

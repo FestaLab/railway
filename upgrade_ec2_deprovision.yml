@@ -1,0 +1,64 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  pre_tasks:
+    - name: Get number of running web servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-webserver"
+          instance-state-name: [ "running" ]
+      register: running_web
+
+    - name: Get number of running worker servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-worker"
+          instance-state-name: [ "running" ]
+      register: running_worker
+
+    - name: Get number of running control servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-control"
+          instance-state-name: [ "running" ]
+      register: running_control
+
+    - amazon.aws.ec2_ami_info:
+        region: "{{ aws_region }}"
+        filters:
+          name: "{{ app_name }}-ami-*"
+      register: register_ami_info
+
+    - set_fact:
+        latest_ami: "{{ register_ami_info.images | sort(attribute='creation_date', reverse = True) | first }}"
+
+    - set_fact:
+        outdated_web: "{{ running_web.instances | rejectattr('image_id', 'equalto', latest_ami.image_id) | map(attribute='instance_id') }}"
+        outdated_worker: "{{ running_worker.instances | rejectattr('image_id', 'equalto', latest_ami.image_id) | map(attribute='instance_id') }}"
+        outdated_control: "{{ running_control.instances | rejectattr('image_id', 'equalto', latest_ami.image_id) | map(attribute='instance_id') }}"
+
+    - name: Remove outdated web instances
+      include_role:
+        name: aws_ec2_destroy
+      vars:
+        param_instance_id: "{{ outdated_web }}"
+      when: outdated_web|length != running_web.instances|length
+
+    - name: Remove outdated worker instances
+      include_role:
+        name: aws_ec2_destroy
+      vars:
+        param_instance_id: "{{ outdated_worker }}"
+      when: outdated_worker|length != running_worker.instances|length
+
+    - name: Remove outdated control instances
+      include_role:
+        name: aws_ec2_destroy
+      vars:
+        param_instance_id: "{{ outdated_control }}"
+      when: outdated_control|length != running_control.instances|length

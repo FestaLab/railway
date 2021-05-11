@@ -1,0 +1,8 @@
+---
+
+- name: Increase max number of file descriptors
+  copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    force: yes
+

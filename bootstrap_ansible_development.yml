@@ -1,0 +1,23 @@
+- name: Configure localhost
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  tasks:
+
+    - name: Install boto and aws packages with pip3 module
+      pip:
+        name:
+          - boto
+          - boto3
+          - botocore
+          - awslogs
+
+    - name: Copy ec2 development key to local ssh folder
+      copy:
+        src: "roles/aws_ec2_create/files/ansible-ec2-development.pem"
+        dest: ~/.ssh/ansible-ec2-development.pem
+        mode: 0600
+
+    - name: Copy ansible credentials to local aws folder
+      import_role:
+        name: ansible_credentials

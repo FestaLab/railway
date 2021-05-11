@@ -1,0 +1,17 @@
+---
+
+- hosts: _railway_ec2_production_*
+  serial: 1
+  remote_user: ansible
+  become: yes
+
+  tasks:
+    - include_role:
+        name: ami_dist_upgrade
+
+    - name: Wait for EC2 instances SSH server to come up before continuing
+      wait_for:
+        port: 22
+        host: "{{ ansible_host }}"
+        delay: 10
+        timeout: 320

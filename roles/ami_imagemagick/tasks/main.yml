@@ -1,0 +1,36 @@
+---
+
+- block:
+
+    - name: Install ImagMagick package if not building image libraries from source
+      apt:
+        name: imagemagick
+        state: present
+        update_cache: False
+
+  when: ansible_build_image_libs == false
+
+- block:
+
+    - name: Download ImageMagick
+      unarchive:
+        src: https://download.imagemagick.org/ImageMagick/download/ImageMagick-{{ ansible_imagemagick_version }}.tar.gz
+        dest: ~/
+        remote_src: True
+
+    - name: Install ImageMagick
+      command: "{{ item }}"
+      args:
+        chdir: ~/ImageMagick-{{ ansible_imagemagick_version }}
+      with_items:
+        - ./configure
+        - make
+        - make install
+        - ldconfig /usr/local/lib
+
+    - name: Cleanup
+      file:
+        path: ~/ImageMagick-{{ ansible_imagemagick_version }}
+        state: absent
+
+  when: ansible_build_image_libs == true

@@ -1,0 +1,50 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Obtain RDS host
+      community.aws.rds_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "db-instance-id": "{{ app_name }}-db-{{ ansible_environment }}"
+      register: register_rds_info
+
+    - name: Obtain Elasticache Job host
+      community.aws.elasticache_info:
+        region: "{{ aws_region }}"
+        name: "{{ app_name }}-elasticache-{{ ansible_environment }}-job"
+      register: register_elasticache_job_info
+
+    - name: Obtain Elasticache Cache host
+      community.aws.elasticache_info:
+        region: "{{ aws_region }}"
+        name: "{{ app_name }}-elasticache-{{ ansible_environment }}-cache"
+      register: register_elasticache_cache_info
+
+    - set_fact:
+        rds_host: "{{ register_rds_info.instances[0].endpoint.address }}"
+        redis_job_host: "{{ register_elasticache_job_info.elasticache_clusters[0].cache_nodes[0].endpoint.address }}"
+        redis_cache_host: "{{ register_elasticache_cache_info.elasticache_clusters[0].cache_nodes[0].endpoint.address }}"
+
+- hosts: _railway_ec2_production_control
+  remote_user: ansible
+  become: yes
+
+  roles:
+    - role: aws_cloudwatch
+      param_name: "{{ ansible_environment }}"
+      param_process_type: control
+      tags: aws_cloudwatch
+
+    - role: aws_hostname
+      param_name: "control{{ play_hosts.index(inventory_hostname) }}"
+
+    - role: app_bootstrap
+      param_name: "{{ ansible_environment }}"
+      param_env_vars: complete
+      param_host: "https://{{ app_host }}"
+      param_rds_host: "{{ hostvars['localhost']['rds_host'] }}"
+      param_redis_job_host: "{{ hostvars['localhost']['redis_job_host'] }}"
+      param_redis_cache_host: "{{ hostvars['localhost']['redis_cache_host'] }}"
+      tags: app_bootstrap

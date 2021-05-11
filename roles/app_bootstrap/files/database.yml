@@ -1,0 +1,13 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+production:
+  <<: *default
+  url:  <%= ENV["DATABASE_URL"].presence %>
+  database: <%= ENV['AWS_RDS_DATABASE'].presence %>
+  username: <%= ENV['AWS_RDS_USERNAME'].presence %>
+  password: <%= ENV['AWS_RDS_PASSWORD'].presence %>
+  host: <%= ENV['AWS_RDS_HOST'].presence %>
+  port: <%= 5432 if ENV['AWS_RDS_HOST'].present? %>

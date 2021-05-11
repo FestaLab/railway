@@ -1,0 +1,31 @@
+---
+
+# AWS
+aws_redis_version: "5.0"
+aws_redis_version_id: "redis5.0"
+aws_redis_port: 6379
+aws_postgres_version: "13"
+aws_postgres_version_id: postgres13
+aws_region: us-east-1
+aws_ami_id: ami-09e67e426f25ce0d7
+aws_backup_bucket: railway-rds-backups
+
+# Ruby
+ruby_version: 3.0.1
+
+# Github
+github_repository_url: git@github.com:FestaLab/railway-app.git
+github_branch: main
+
+# App
+app_name: railway
+app_host: railway.festalab.com.br
+
+# Ansible stuff
+ansible_override_puma_config: true
+ansible_override_sidekiq_config: true
+ansible_override_database_config: true
+ansible_build_image_libs: false
+ansible_use_static_build_for_ffmpeg: false
+ansible_libvips_version: 8.10.6
+ansible_imagemagick_version: 7.0.11-12

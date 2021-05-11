@@ -1,0 +1,8 @@
+---
+
+- name: Precompile app assets
+  shell: ~/.rbenv/shims/bundle exec rake assets:precompile assets:clean[10]
+  args:
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app

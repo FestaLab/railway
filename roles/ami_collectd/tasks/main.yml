@@ -1,0 +1,15 @@
+- name: Install the collectd daemon
+  apt:
+    name: collectd
+    state: present
+    update_cache: False
+
+- name: Enable collectd
+  service:
+    name: collectd
+    enabled: yes
+
+- name: Start collectd
+  service:
+    name: collectd
+    state: started

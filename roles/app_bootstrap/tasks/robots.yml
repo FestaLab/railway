@@ -1,0 +1,9 @@
+---
+
+- name: Block all crawlers
+  copy:
+    src: "robots.txt"
+    dest: /home/app/{{ param_name }}/public/
+    owner: app
+    mode: 0755
+  when: ansible_environment == 'development'

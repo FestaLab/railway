@@ -1,0 +1,15 @@
+- name: Configure localhost
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  tasks:
+
+    - name: Copy ec2 production key to local ssh folder
+      copy:
+        src: "roles/aws_ec2_create/files/ansible-ec2-production.pem"
+        dest: ~/.ssh/ansible-ec2-production.pem
+        mode: 0600
+
+    - name: Copy ansible credentials to local aws folder
+      import_role:
+        name: ansible_credentials

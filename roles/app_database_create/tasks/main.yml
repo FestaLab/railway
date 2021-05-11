@@ -1,0 +1,33 @@
+---
+- name: Copy the railway rake task
+  copy:
+    src: "railway.rake"
+    dest: /home/app/{{ param_name }}/lib/tasks/railway.rake
+    owner: app
+    mode: 0755
+
+- name: Check if database exists
+  shell: ~/.rbenv/shims/bundle exec rake railway:exists
+  args:
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app
+  ignore_errors: True
+  changed_when: false
+  register: check_database
+
+- name: Create database
+  shell: ~/.rbenv/shims/rails db:create
+  args:
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app
+  when: check_database.rc == 1
+
+- name: Perform the migrations
+  shell: ~/.rbenv/shims/rails db:migrate
+  args:
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app
+  when: check_database.rc == 1

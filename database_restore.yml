@@ -1,0 +1,52 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Obtain RDS host
+      community.aws.rds_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "db-instance-id": festalab-db-{{ ansible_environment }}
+      register: register_rds_info
+
+    - set_fact:
+        rds_host: "{{ register_rds_info.instances[0].endpoint.address }}"
+
+- hosts: _railway_ec2_development_worker
+  gather_facts: False
+  remote_user: ansible
+  become: yes
+
+  roles:
+    - role: app_database_create
+      param_name: dev{{ group_id }}
+      tags: app_database_create
+
+    - role: aws_rds_restore
+      param_name: "dev{{ group_id }}"
+      param_rds_host: "{{ hostvars['localhost']['rds_host'] }}"
+      param_rds_username: "{{ aws_rds_username }}"
+      param_rds_password: "{{ aws_rds_password }}"
+      param_rds_database: "{{ aws_rds_database }}{{ group_id }}"
+      param_dump_type: "{{ dump_type | default('truncated') }}"
+      tags: aws_rds_restore
+
+    - role: app_deploy_migrate
+      param_name: "dev{{ group_id }}"
+      tags: app_deploy_migrate
+
+    - role: app_worker_server_restart
+      param_name: "dev{{ group_id }}"
+      tags: app_worker_server_restart
+
+  post_tasks:
+    - name: Clear the caches
+      shell: ~/.rbenv/shims/bundle exec rake festalab:development:clear_caches
+      args:
+        chdir: ~app/dev{{ group_id }}
+      become: yes
+      become_user: app
+      ignore_errors: yes
+      changed_when: false
+      register: check_database

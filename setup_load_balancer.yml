@@ -1,0 +1,30 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  pre_tasks:
+    - community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-webserver"
+          instance-state-name: [ "running" ]
+      register: register_instance_info
+
+    - set_fact:
+        port: 300{{ group_id|default(0) }}
+
+    - set_fact:
+        targets: "{{ targets|default([]) + [{ 'Id': item.instance_id, 'Port': port | int}] }}"
+      with_items: "{{ register_instance_info.instances }}"
+
+    - name: "The following instances will be set in the target group"
+      debug:
+        msg: "{{ targets }}"
+
+  roles:
+    - role: aws_alb_create
+      param_name: "{{ group_id|default(0) }}"
+      param_targets: "{{ targets }}"
+      param_port: "{{ port }}"
+      tags: aws_alb_create

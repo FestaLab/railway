@@ -1,0 +1,19 @@
+---
+
+- name: Create AWS folder
+  file:
+    path: ~/.aws
+    state: directory
+    mode: 0755
+
+- name: Copy AWS config file
+  copy:
+    src: config
+    dest: ~/.aws/config
+    force: yes
+
+- name: Copy AWS credentials
+  template:
+    src: credentials.j2
+    dest: ~/.aws/credentials
+    force: True

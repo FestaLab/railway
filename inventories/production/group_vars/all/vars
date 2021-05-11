@@ -1,0 +1,30 @@
+# Ansible
+ansible_environment: production
+
+# AWS
+aws_access_key: "{{ vault_aws_access_key }}"
+aws_secret_key: "{{ vault_aws_secret_key }}"
+aws_rds_username: "{{ vault_aws_rds_username }}"
+aws_rds_password: "{{ vault_aws_rds_password }}"
+aws_rds_database: "{{ vault_aws_rds_database }}"
+aws_certificate_arn: "{{ vault_aws_certificate_arn }}"
+
+# AWS Infra
+infra_vpc_cidr_block_start: "172.33"
+infra_rds_instance_type: "db.t3.small"
+infra_rds_size: "50"
+infra_rds_backup_retention: "7"
+infra_rds_read_replica: true
+infra_redis_cache_instance_type: "cache.t3.micro"
+infra_redis_job_instance_type: "cache.t3.micro"
+infra_ec2_web_instance_type: "t3.small"
+infra_ec2_web_scaling_min: 2
+infra_ec2_worker_instance_type: "t3.small"
+infra_ec2_worker_scaling_min: 2
+infra_ec2_control_instance_type: "t3.small"
+infra_ec2_control_scaling_min: 1
+
+# App
+app_max_threads: 3
+app_puma_concurrency: 2
+app_sidekiq_concurrency: 10

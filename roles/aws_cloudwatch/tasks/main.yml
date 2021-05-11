@@ -1,0 +1,53 @@
+---
+
+- name: Set AWS key and secret
+  template:
+    src: credentials.j2
+    dest: /home/app/.aws_credentials
+  register: result
+
+- name: Check if agent is present
+  stat:
+    path: ~/amazon-cloudwatch-agent.deb
+  register: agent
+
+- block:
+
+    - name: Download AWS Cloudwatch Agent
+      get_url:
+        url: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+        dest: ~/amazon-cloudwatch-agent.deb
+
+    - name: Install AWS Cloudwatch Agent
+      apt:
+        deb: ~/amazon-cloudwatch-agent.deb
+
+    - name: Cleanup
+      file:
+        path: ~/amazon-cloudwatch-agent.deb
+        state: absent
+
+  when: agent.stat.exists == false
+
+- name: Copy common config file for AWS Cloudwatch Agent
+  copy:
+    src: common-config.toml
+    dest: /opt/aws/amazon-cloudwatch-agent/etc
+  register: common_config_file
+
+- name: Copy config file for AWS Cloudwatch Agent
+  template:
+    src: config.j2
+    dest: /opt/aws/amazon-cloudwatch-agent/bin/config.json
+  register: config_file
+
+- block:
+
+    - name: Stop the agent if the config files changed
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a stop
+      when: config_file.changed == True or common_config_file.changed == True
+
+    - name: Start the agent
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+
+  when: config_file.changed == True or common_config_file.changed == True

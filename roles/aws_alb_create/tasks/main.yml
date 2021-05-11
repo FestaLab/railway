@@ -1,0 +1,73 @@
+---
+
+- name: Obtaining configured VPC for {{ ansible_environment }} env
+  amazon.aws.ec2_vpc_net_info:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ app_name }}-vpc-{{ ansible_environment }}"
+  register: register_vpc_info
+
+- name: Obtaining configured SG for {{ ansible_environment }} env
+  amazon.aws.ec2_group_info:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ app_name }}-sg-{{ ansible_environment }}"
+  register: register_sg_info
+
+- name: Obtaining configured SUBNETS for {{ ansible_environment }} env
+  amazon.aws.ec2_vpc_subnet_info:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ app_name }}-subnet-{{ ansible_environment }}-*"
+  register: register_subnet_info
+
+- name: Creating target group
+  community.aws.elb_target_group:
+    health_check_interval: "{{ infra_ec2_health_check_interval | default('300') }}"
+    health_check_path: "{{ param_health_check_path | default('/api/health_check') }}"
+    health_check_port: traffic-port
+    health_check_protocol: http
+    health_check_timeout: 5
+    healthy_threshold_count: 5
+    modify_targets: "{{ targets is defined }}"
+    name: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_name }}"
+    port: "{{ param_port }}"
+    protocol: http
+    region: "{{ aws_region }}"
+    state: present
+    stickiness_enabled: false
+    successful_response_codes: "200"
+    tags:
+      Name: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_name }}"
+      Environment: "{{ app_name }}-app-{{ ansible_environment }}"
+    target_type: instance
+    targets: "{{ param_targets | default(omit) }}"
+    unhealthy_threshold_count: 2
+    vpc_id: "{{ register_vpc_info.vpcs[0].vpc_id }}"
+  register: tg_create_result
+
+- name: Creating application load balancer
+  community.aws.elb_application_lb:
+    deletion_protection: no
+    listeners:
+      - Protocol: HTTPS
+        Port: 443
+        SslPolicy: ELBSecurityPolicy-2016-08
+        Certificates:
+          - CertificateArn: "{{ aws_certificate_arn }}"
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_name }}"
+    name: "{{ app_name }}-alb-{{ ansible_environment }}-{{ param_name }}"
+    purge_listeners: yes
+    purge_rules: yes
+    purge_tags: yes
+    region: "{{ aws_region }}"
+    scheme: internet-facing
+    security_groups: "{{ register_sg_info.security_groups[0].group_id }}"
+    state: present
+    subnets: "{{ register_subnet_info.subnets | map(attribute='id') | list }}"
+    tags:
+      Name: "{{ app_name }}-alb-{{ ansible_environment }}-{{ param_name }}"
+      Environment: "{{ app_name }}-app-{{ ansible_environment }}"
+    wait: false

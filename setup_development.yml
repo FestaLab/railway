@@ -1,0 +1,8 @@
+---
+
+- import_playbook: setup_web_ec2.yml
+- import_playbook: setup_web_development.yml
+- import_playbook: setup_load_balancer.yml
+
+- import_playbook: setup_worker_ec2.yml
+- import_playbook: setup_worker_development.yml

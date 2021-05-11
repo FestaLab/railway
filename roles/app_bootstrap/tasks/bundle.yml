@@ -1,0 +1,40 @@
+---
+
+- name: Install rails release version
+  shell: $(which su) - app -c "gem install rails"
+  environment:
+    RBENV_VERSION: "{{ ruby_version }}"
+  args:
+    creates: ~app/.rbenv/versions/{{ ruby_version }}/bin/rails
+
+- name: Set bundle config flags to not install development and test gems
+  shell: $(which su) - app -c "bundle config set without 'development:test'"
+  args:
+    creates: ~app/{{ param_name }}/.bundle/config
+
+- name: Set bundle config flags to use all cores available to install
+  shell: $(which su) - app -c "bundle config set jpbs {{ ansible_processor_vcpus }}"
+  args:
+    creates: ~app/{{ param_name }}/.bundle/config
+
+- name: Install app bundle 
+  bundler:
+    state: present
+    executable: ~/.rbenv/shims/bundle
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app
+  register: install_bundle
+
+- name: Install yarn packages
+  community.general.yarn:
+    path: ~/{{ param_name }}
+  become: yes
+  become_user: app
+
+- name: Reshash rbenv to insert shims
+  shell: ~/.rbenv/bin/rbenv rehash
+  args:
+    chdir: ~app/{{ param_name }}
+  become: yes
+  become_user: app

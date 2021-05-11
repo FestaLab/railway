@@ -1,0 +1,81 @@
+---
+
+- name: Check if application files are present
+  stat:
+    path: ~app/{{ param_name }}/config.ru
+  register: app_directory
+
+- block:
+
+    - name: Copy deploy key
+      copy:
+        src: "{{ ansible_environment }}/deploy_id_rsa"
+        dest: ~app/.ssh/deploy_id_rsa
+        owner: app
+        group: app
+        mode: 0600
+
+    - name: Download latest version from github to {{ param_name }}
+      git:
+        repo: "{{ github_repository_url }}"
+        dest: ~/{{ param_name }}
+        version: "{{ github_branch }} "
+        update: no
+        accept_hostkey: yes
+        key_file: ~/.ssh/deploy_id_rsa
+      become: yes
+      become_user: app
+
+  when: app_directory.stat.exists == false
+
+- name: Insert master key
+  copy:
+    src: "{{ ansible_environment }}/master.key"
+    dest: ~app/{{ param_name }}/config/master.key
+    owner: app
+    group: app
+    mode: 0600
+
+- name: Insert amazon rds certificates
+  copy:
+    src: "rds_combined_ca_bundle.pem"
+    dest: ~app/{{ param_name }}/config/rds_combined_ca_bundle.pem
+    owner: app
+    group: app
+    mode: 0600
+
+- name: Override puma initializer
+  copy:
+    src: "puma.rb"
+    dest: ~app/{{ param_name }}/config/puma.rb
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_puma_config == True
+
+- name: Override sidekiq initializer
+  copy:
+    src: "sidekiq.rb"
+    dest: ~app/{{ param_name }}/config/initializers/sidekiq.rb
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_sidekiq_config == True
+
+- name: Override sidekiq config
+  copy:
+    src: "sidekiq.yml"
+    dest: ~app/{{ param_name }}/config/sidekiq.yml
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_sidekiq_config == True
+
+- name: Override database config
+  copy:
+    src: "database.yml"
+    dest: ~app/{{ param_name }}/config/database.yml
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_database_config == True

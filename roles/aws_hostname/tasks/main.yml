@@ -1,0 +1,5 @@
+---
+
+- name: Setting friendly hostname
+  hostname:
+    name: "{{ param_name }}"

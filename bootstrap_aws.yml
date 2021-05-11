@@ -1,0 +1,6 @@
+---
+
+- import_playbook: bootstrap_aws_vpc.yml
+- import_playbook: bootstrap_aws_redis_cache.yml
+- import_playbook: bootstrap_aws_redis_job.yml
+- import_playbook: bootstrap_aws_rds.yml

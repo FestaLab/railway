@@ -1,0 +1,15 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  roles:
+    - role: aws_rds_pg_create
+      tags: aws_rds_pg_create
+
+    - role: aws_rds_create
+      param_backup_retention: "{{ infra_rds_backup_retention }}"
+      param_instance_type: "{{ infra_rds_instance_type }}"
+      param_size: "{{ infra_rds_size }}"
+      param_read_replica: "{{ infra_rds_read_replica | default(false) }}"
+      tags: aws_rds_create

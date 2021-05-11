@@ -1,0 +1,24 @@
+---
+
+- name: Install chrony daemon.
+  apt:
+    name: chrony
+    state: present
+    update_cache: False
+
+- name: Set timezone for chrony
+  file:
+    src: /usr/share/zoneinfo/America/Sao_Paulo
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+- name: Enable chrony daemon.
+  service:
+    name: chronyd
+    enabled: yes
+
+- name: Start chrony daemon. 
+  service:
+    name: chronyd
+    state: started

@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  roles:
+    - role: aws_vpc_create
+      param_name: development
+      param_vpc_cidr_block_start: "{{ infra_vpc_cidr_block_start }}"
+      tags: aws_vpc_create

@@ -1,0 +1,23 @@
+---
+
+- name: Install sidekiq systemd service
+  template:
+    src: sidekiq.service.j2
+    dest: /lib/systemd/system/sidekiq_{{ param_name }}.service
+    mode: 600
+  register: sidekiq_service
+
+- name: Reload systemctl service
+  systemd:
+    daemon_reload: yes
+  when: sidekiq_service.changed == True
+
+- name: Enable sidekiq service
+  service:
+    name: sidekiq_{{ param_name }}
+    enabled: yes
+
+- name: Start sidekiq service
+  service:
+    name: sidekiq_{{ param_name }}
+    state: restarted

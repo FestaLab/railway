@@ -1,0 +1,7 @@
+---
+
+- name: Install Node.js and Yarn
+  apt:
+    name: yarn
+    state: present
+    update_cache: False

@@ -1,0 +1,64 @@
+---
+
+- name: Ensuring parameter group named {{ app_name }}-sg-{{ ansible_environment }} exists
+  community.aws.rds_param_group:
+    state: present
+    name: "{{ app_name }}-sg-{{ ansible_environment }}"
+    description: 'Postgres 13 parameter group'
+    engine: 'postgres13'
+    params:
+      max_standby_archive_delay: -1
+      max_standby_streaming_delay: -1
+
+- name: Obtaining the ID of the recently created group
+  amazon.aws.ec2_group_info:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ app_name }}-sg-{{ ansible_environment }}"
+  register: register_sg_info
+
+- name: Provisioning a {{ param_instance_type }} instance tagged as {{ app_name }}-db-{{ ansible_environment }}
+  community.aws.rds:
+    backup_retention: "{{ param_backup_retention }}"
+    backup_window: "04:00-06:00"
+    command: create
+    db_engine: postgres
+    db_name: "{{ aws_rds_database }}"
+    engine_version: "{{ aws_postgres_version }}"
+    instance_name: "{{ app_name }}-db-{{ ansible_environment }}"
+    instance_type: "{{ param_instance_type }}"
+    maint_window: "Tue:06:00-Tue:08:00"
+    parameter_group: "{{ app_name }}-rds-pg-{{ ansible_environment }}"
+    password: "{{ aws_rds_password }}"
+    port: 5432
+    publicly_accessible: yes
+    subnet: "{{ app_name }}-rds-subnet-{{ ansible_environment }}"
+    region: "{{ aws_region }}"
+    size: "{{ param_size }}"
+    username: "{{ aws_rds_username }}"
+    vpc_security_groups: "{{ register_sg_info.security_groups[0].group_id }}"
+    zone: "{{ aws_region }}a"
+    wait: True
+    wait_timeout: 1800
+    tags:
+      Environment: "{{ app_name }}-app-{{ ansible_environment }}"
+      Name: "{{ app_name }}-db-{{ ansible_environment }}"
+
+- name: Provisioning a read replica for {{ app_name }}-db-{{ ansible_environment }}
+  community.aws.rds:
+    command: replicate
+    db_engine: postgres
+    instance_name: "{{ app_name }}-db-{{ ansible_environment }}-replica"
+    port: 5432
+    publicly_accessible: yes
+    source_instance: "{{ app_name }}-db-{{ ansible_environment }}"
+    region: "{{ aws_region }}"
+    username: "{{ aws_rds_username }}"
+    zone: "{{ aws_region }}b"
+    wait: yes
+    wait_timeout: 1800
+    tags:
+      Environment: "{{ app_name }}-app-{{ ansible_environment }}"
+      Name: "{{ app_name }}-db-{{ ansible_environment }}-replica"
+  when: param_read_replica == true
+

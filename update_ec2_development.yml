@@ -1,0 +1,9 @@
+---
+
+- hosts: _railway_ec2_development_*
+  remote_user: ansible
+  become: yes
+
+  tasks:
+    - include_role:
+        name: ami_dist_upgrade

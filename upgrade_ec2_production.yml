@@ -1,0 +1,5 @@
+---
+
+- import_playbook: upgrade_ec2_provision.yml
+- import_playbook: setup_production.yml
+- import_playbook: upgrade_ec2_deprovision.yml

@@ -1,0 +1,17 @@
+[Unit]
+Description=Puma HTTP Server
+After=syslog.target network.target
+
+[Service]
+Type=notify
+WatchdogSec=10
+User=app
+WorkingDirectory=/home/app/{{ param_name }}
+SyslogIdentifier=puma_{{ param_name }}
+
+Environment=RAILS_MAX_THREADS={{ app_max_threads }}
+ExecStart=/home/app/.rbenv/shims/bundle exec puma -C /home/app/{{ param_name }}/config/puma.rb -p {{ param_port }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

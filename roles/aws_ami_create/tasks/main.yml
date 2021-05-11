@@ -1,0 +1,17 @@
+---
+
+- shell: "date +%Y%m%d%H%M%S"
+  register: tstamp
+  changed_when: False
+
+- name: Create AMI {{ app_name }}-ami-{{ tstamp.stdout_lines[0] }} from instance {{ param_instance_id }}
+  amazon.aws.ec2_ami:
+    region: "{{ aws_region }}"
+    instance_id: "{{ param_instance_id }}"
+    description: "Base AMI for EC2 instances used by {{ app_name }}-app"
+    wait: yes
+    name: "{{ app_name }}-ami-{{ tstamp.stdout_lines[0] }}"
+  register: result_ami_create
+
+- debug:
+    msg: "AMI - {{ result_ami_create.image_id }}"

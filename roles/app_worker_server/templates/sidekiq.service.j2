@@ -1,0 +1,17 @@
+[Unit]
+Description=Sidekiq Server
+After=syslog.target network.target
+
+[Service]
+Type=notify
+WatchdogSec=10
+User=app
+WorkingDirectory=/home/app/{{ param_name }}
+SyslogIdentifier=sidekiq_{{ param_name }}
+
+Environment=RAILS_MAX_THREADS={{ app_sidekiq_concurrency + 3 }}
+ExecStart=/home/app/.rbenv/shims/bundle exec sidekiq -C /home/app/{{ param_name }}/config/sidekiq.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

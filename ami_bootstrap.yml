@@ -1,0 +1,23 @@
+---
+
+- hosts: _railway_ec2_development_ami
+  remote_user: ubuntu
+  become: true
+  gather_facts: no
+
+  roles:
+
+    - role: ami_user
+      param_name: ansible
+      param_comment: Ansible user
+      param_sudo: yes
+      tags: ansible_user
+
+    - role: ami_user
+      param_name: app
+      param_comment: Application user
+      param_sudo: yes
+      tags: user_app
+
+    - role: ami_ulimit
+      tags: ulimit

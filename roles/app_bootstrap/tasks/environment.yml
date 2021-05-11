@@ -1,0 +1,16 @@
+---
+
+- name: Get aws instance ID to use in rbenv-vars
+  shell: ec2metadata --instance-id
+  register: aws_instance_id_return
+
+- set_fact:
+    aws_instance_id: "{{ aws_instance_id_return.stdout }}"
+
+- name: Set {{ param_name }} environment variables
+  template:    
+    src: rbenv-vars-{{ param_env_vars | default('minimal') }}.j2
+    dest: ~app/{{ param_name }}/.rbenv-vars
+    owner: app
+    group: app
+    mode: 0600

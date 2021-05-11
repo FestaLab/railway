@@ -1,0 +1,66 @@
+---
+
+- hosts: _railway_ec2_development_ami
+  remote_user: ansible
+  become: yes
+  roles:
+    - role: ami_repos
+      tags: repos
+
+    - role: ami_dist_upgrade
+      tags: dist_upgrade
+
+    - role: ami_time
+      tags: time
+
+    - role: ami_cron
+      tags: cron
+
+    - role: ami_ufw
+      tags: ufw
+
+    - role: ami_ssh
+      tags: ssh
+
+    - role: ami_collectd
+      tags: collectd
+
+    - role: ami_purge_services
+      tags: purge_services
+
+    - role: ami_buildtools
+      tags: buildtools
+
+    - role: ami_python
+      tags: python
+
+    - role: ami_node
+      tags: node
+
+    - role: ami_postgres
+      tags: postgres
+
+    - role: ami_emoji
+      tags: emoji
+
+    - role: ami_chrome
+      tags: chrome
+
+    - role: ami_ffmpeg
+      tags: ffmpeg
+
+    - role: ami_pdf
+      tags: pdf
+
+    - role: ami_libjxl
+      tags: libjxl
+
+    - role: ami_imagemagick
+      tags: imagemagick
+
+    - role: ami_libvips
+      tags: libvips
+
+    - role: ami_ruby
+      param_version: "{{ ruby_version }}"
+      tags: ruby

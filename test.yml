@@ -1,0 +1,6 @@
+---
+
+- hosts: _railway_ec2_development_worker
+  gather_facts: True
+  remote_user: ansible
+  become: yes

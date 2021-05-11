@@ -1,0 +1,23 @@
+---
+
+- name: Install puma systemd service
+  template:
+    src: puma.service.j2
+    dest: /lib/systemd/system/puma_{{ param_name }}.service
+    mode: 600
+  register: puma_service
+
+- name: Reload systemctl service
+  systemd:
+    daemon_reload: yes
+  when: puma_service.changed == True
+
+- name: Enable puma service
+  service:
+    name: puma_{{ param_name }}
+    enabled: yes
+
+- name: Start puma service
+  service:
+    name: puma_{{ param_name }}
+    state: restarted

@@ -1,0 +1,15 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  roles:
+    - role: aws_elasticache_pg_create
+      param_policy: allkeys-lfu
+      tags: aws_elasticache_pg_create
+
+    - role: aws_elasticache_create
+      param_name: "cache"
+      param_policy: allkeys-lfu
+      param_instance_type: "{{ infra_redis_cache_instance_type }}"
+      tags: aws_elasticache_create

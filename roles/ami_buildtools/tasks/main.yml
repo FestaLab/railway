@@ -1,0 +1,54 @@
+---
+
+- name: Install basic build tools
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - autoconf
+      - bison
+      - build-essential
+      - cmake
+      - gcc
+      - make
+      - meson
+      - nasm
+      - pkg-config
+      - software-properties-common
+      - shared-mime-info
+
+- name: Install dev
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - libgsf-1-dev
+      - libpq-dev
+      - libtiff5-dev
+      - libjpeg-turbo8-dev
+      - libexif-dev
+      - librsvg2-dev
+      - libpng-dev
+      - libwebp-dev
+      - libgif-dev
+      - libmatio-dev
+      - libcfitsio-dev
+      - libopenexr-dev
+      - libopenslide-dev
+      - libheif-dev
+      - libgsf-1-dev
+      - libfftw3-dev
+      - liblcms2-dev
+      - libimagequant-dev
+      - liborc-0.4-dev
+      - libcairo2-dev
+      - libpango1.0-dev
+      - libbrotli-dev
+      - libexpat1-dev
+      - libglib2.0-dev
+      - libssl-dev
+

@@ -1,0 +1,36 @@
+---
+
+- block:
+
+    - name: Get previous commit
+      command: git rev-parse HEAD
+      args:
+        chdir: ~app/{{ param_name }}
+      changed_when: false
+      failed_when: false
+      register: check_previous_commit
+
+    - set_fact:
+        previous_commit: "{{ check_previous_commit.stdout }}"
+
+    - name: Send deployment start
+      community.general.slack:
+        token: T58JKBZJS/B01U24EN7M0/1NI4yo1Z9izDFWyyIlxifcRg
+        attachments:
+          - text: Deploy has started
+            color: "{{ param_color }}"
+            fields:
+              - title: Current commit
+                value: "{{ previous_commit }}"
+            actions:
+              - type: button
+                text: Compare
+                url: https://github.com/FestaLab/festalab-app/compare/{{ previous_commit }}...HEAD
+
+  when: param_status == "started"
+
+- name: Send deployment end
+  community.general.slack:
+    token: T58JKBZJS/B01U24EN7M0/1NI4yo1Z9izDFWyyIlxifcRg
+    msg: Deploy has ended
+  when: param_status == "ended"

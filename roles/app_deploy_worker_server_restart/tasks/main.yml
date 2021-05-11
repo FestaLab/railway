@@ -1,0 +1,6 @@
+---
+
+- name: Restart sidekiq service
+  service:
+    name: sidekiq_{{ param_name }}
+    state: restarted

@@ -1,0 +1,6 @@
+---
+
+- name: Restart puma service
+  service:
+    name: puma_{{ param_name }}
+    state: restarted

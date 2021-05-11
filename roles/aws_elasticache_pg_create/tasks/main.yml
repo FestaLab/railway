@@ -1,0 +1,19 @@
+---
+
+- name: Ensuring parameter group with maxmemory-policy set to {{ param_policy }} exists
+  community.aws.elasticache_parameter_group:
+    region: "{{ aws_region }}"
+    name: elasticache-pg-{{ param_policy }}
+    group_family: "{{ aws_redis_version_id }}"
+    description: This is a "{{ param_policy }}" parameter group
+    state: present
+  register: check_parameter_group
+
+- name: Set maxmemory-policy for newly created parameter group
+  community.aws.elasticache_parameter_group:
+    region: "{{ aws_region }}"
+    name: elasticache-pg-{{ param_policy }}
+    values:
+      maxmemory-policy: "{{ param_policy }}"
+    state: present
+  when: check_parameter_group.changed

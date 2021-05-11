@@ -1,0 +1,21 @@
+RACK_ENV=production
+
+RAILS_ENV=production
+RAILS_HOST={{ param_host }}
+RAILS_QUALIFIED_HOST={{ param_host }}
+RAILS_SERVE_STATIC_FILES=true
+RAILS_LOG_TO_STDOUT=true
+
+PUMA_CONCURRENCY={{ app_puma_concurrency }}
+SIDEKIQ_CONCURRENCY={{ app_sidekiq_concurrency }}
+
+AWS_RDS_USERNAME={{ aws_rds_username }}
+AWS_RDS_PASSWORD={{ aws_rds_password }}
+AWS_RDS_DATABASE={{ aws_rds_database }}{{ param_group_id | default('') }}
+AWS_RDS_HOST={{ param_rds_host }}
+AWS_REDIS_JOB_URL=redis://{{ param_redis_job_host }}:{{ aws_redis_port }}/{{ param_group_id | default('1') }}
+AWS_REDIS_CACHE_URL=redis://{{ param_redis_cache_host }}:{{ aws_redis_port }}/{{ param_group_id | default('1') }}
+AWS_REDIS_CACHE_HOST={{ param_redis_cache_host }}
+
+SERVER_ID={{ aws_instance_id }}
+NODE_IDENTIFIER={{ param_name }}

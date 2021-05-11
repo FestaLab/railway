@@ -1,0 +1,53 @@
+---
+
+- name: Get latest {{ param_dump_type }} dump from S3
+  amazon.aws.aws_s3:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    region: "{{ aws_region }}"
+    prefix: "{{ param_dump_type }}"
+    bucket: "{{ aws_backup_bucket }}"
+    mode: list
+  register: backups
+
+- set_fact:
+    filename: "{{ backups.s3_keys | sort | last }}"
+
+- name: Check if dump is already downloaded
+  stat:
+    path: ~/{{ filename }}
+  register: dump
+
+- name: Downloading {{ filename }}
+  amazon.aws.aws_s3:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    region: "{{ aws_region }}"
+    bucket: "{{ aws_backup_bucket }}"
+    prefix: "{{ param_dump_type }}"
+    object: "{{ filename }}"
+    dest: "~/{{ filename }}"
+    mode: get
+  when: dump.stat.exists == false
+
+- name: Kill all active database connections
+  community.general.postgresql_query:
+    db: "{{ param_rds_database }}"
+    login_host: "{{ param_rds_host }}"
+    login_password: "{{ param_rds_password }}"
+    login_user: "{{ param_rds_username }}"
+    query: SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '{{ param_rds_database }}' AND pid <> pg_backend_pid();
+
+- name: Recreate database
+  shell: ~/.rbenv/shims/rails db:drop db:create
+  args:
+    chdir: ~app/{{ param_name }}
+  environment:
+    DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+  become: yes
+  become_user: app
+
+- name: Restoring dump to database {{ param_rds_database }}
+  shell: PGPASSWORD={{ param_rds_password }} pg_restore --verbose --clean --no-acl --no-owner -h {{ param_rds_host }} -U {{ param_rds_username }} -d {{ param_rds_database }} ~/{{ filename }}
+  failed_when: false
+

@@ -1,0 +1,22 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  pre_tasks:
+    - amazon.aws.ec2_ami_info:
+        region: "{{ aws_region }}"
+        filters:
+          name: "{{ app_name }}-ami-*"
+      register: register_ami_info
+
+    - set_fact:
+        ami: "{{ register_ami_info.images | sort(attribute='creation_date', reverse = True) | first }}"
+
+  roles:
+    - role: aws_ec2_create
+      param_name: "webserver"
+      param_instance_type: "{{ infra_ec2_web_instance_type }}"
+      param_ami_id: "{{ ami.image_id }}"
+      param_exact_count: "{{ web | default(infra_ec2_web_scaling_min) }}"
+      tags: aws_ec2_create

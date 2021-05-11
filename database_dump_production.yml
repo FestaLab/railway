@@ -1,0 +1,28 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Obtain replica RDS host
+      community.aws.rds_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "db-instance-id": "{{ app_name }}-db-{{ ansible_environment }}-replica"
+      register: register_rds_info
+
+    - set_fact:
+        rds_host: "{{ register_rds_info.instances[0].endpoint.address }}"
+
+- hosts: _railway_ec2_production_control
+  gather_facts: False
+  remote_user: ansible
+  become: yes
+
+  roles:
+    - role: aws_rds_dump
+      param_rds_host: "{{ hostvars['localhost']['rds_host'] }}"
+      param_rds_username: "{{ aws_rds_username }}"
+      param_rds_password: "{{ aws_rds_password }}"
+      param_rds_database: "{{ aws_rds_database }}"
+      param_dump_type: full
+      tags: aws_rds_dump

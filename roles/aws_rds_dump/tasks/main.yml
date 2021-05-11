@@ -1,0 +1,28 @@
+---
+
+- shell: "date +%Y%m%d"
+  register: tstamp
+  changed_when: False
+
+- set_fact:
+    filename: "{{ param_dump_type }}_{{ tstamp.stdout_lines[0] }}.dump"
+
+- name: Dump the database to {{ filename }}
+  shell: PGPASSWORD={{ param_rds_password }} pg_dump -Fc --no-acl --no-owner -T 'unique_events' -T 'email_marketing_events' -h {{ param_rds_host }} -U {{ param_rds_username }} {{ param_rds_database }} > {{ filename }}
+  args:
+    creates: "{{ filename }}"
+
+- name: Upload to S3 backups folder
+  amazon.aws.aws_s3:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    region: "{{ aws_region }}"
+    bucket: "{{ aws_backup_bucket }}"
+    object: "{{ filename }}"
+    src: "{{ filename }}"
+    mode: put
+
+- name: Remove file
+  file:
+    path: "{{ filename }}"
+    state: absent

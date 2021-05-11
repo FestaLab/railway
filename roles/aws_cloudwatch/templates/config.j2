@@ -1,0 +1,41 @@
+{
+  "agent": {
+    "metrics_collection_interval": 10,
+    "run_as_user": "root",
+    "region": "{{ aws_region }}",
+    "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          { "file_path": "/var/log/syslog",
+            "log_group_name": "{{ app_name }}-ec2-{{ ansible_environment }}",
+            "log_stream_name": "{{ param_process_type }}" }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "namespace": "{{ app_name }}-ec2-{{ ansible_environment }}-{{ param_process_type }}",
+    "metrics_collected": {
+      "collectd": { "metrics_aggregation_interval": 60 },
+      "cpu": {
+        "measurement": ["cpu_usage_active"],
+        "metrics_collection_interval": 10,
+        "totalcpu": true,
+        "resources": ["*"]
+      },
+      "disk": {
+        "measurement": [ "used_percent" ],
+        "metrics_collection_interval": 10,
+        "resources": ["*"]
+      },
+      "mem": {
+        "measurement": ["mem_used_percent"],
+        "metrics_collection_interval":10
+      }
+    }
+  }
+}
+

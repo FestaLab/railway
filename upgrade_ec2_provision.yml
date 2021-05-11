@@ -1,0 +1,42 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - name: Get most recent AMI
+      amazon.aws.ec2_ami_info:
+        region: "{{ aws_region }}"
+        filters:
+          name: "{{ app_name }}-ami-*"
+      register: register_ami_info
+
+    - name: Get running web servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-webserver"
+          instance-state-name: [ "running" ]
+      register: register_web_info
+
+    - name: Get running worker servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-worker"
+          instance-state-name: [ "running" ]
+      register: register_worker_info
+
+    - name: Get running control servers
+      community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-control"
+          instance-state-name: [ "running" ]
+      register: register_control_info
+
+    - set_fact:
+        ami: "{{ register_ami_info.images | sort(attribute='creation_date', reverse = True) | first }}"
+        web: "{{ register_web_info.instances|length * 2 }}"
+        worker: "{{ register_worker_info.instances|length * 2 }}"
+        control: "{{ register_control_info.instances|length * 2 }}"

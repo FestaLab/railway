@@ -1,0 +1,28 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Obtain RDS host
+      community.aws.rds_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "db-instance-id": "{{ app_name }}-db-{{ ansible_environment }}"
+      register: register_rds_info
+
+    - set_fact:
+        rds_host: "{{ register_rds_info.instances[0].endpoint.address }}"
+
+- hosts: _railway_ec2_development_worker
+  gather_facts: False
+  remote_user: ansible
+  become: yes
+
+  roles:
+    - role: aws_rds_dump
+      param_rds_host: "{{ hostvars['localhost']['rds_host'] }}"
+      param_rds_username: "{{ aws_rds_username }}"
+      param_rds_password: "{{ aws_rds_password }}"
+      param_rds_database: "{{ aws_rds_database }}0"
+      param_dump_type: truncated
+      tags: aws_rds_dump

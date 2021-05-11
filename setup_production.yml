@@ -1,0 +1,14 @@
+---
+
+# Create the web server
+- import_playbook: setup_web_ec2.yml
+- import_playbook: setup_web_production.yml
+- import_playbook: setup_load_balancer.yml
+
+# Create the worker server
+- import_playbook: setup_worker_ec2.yml
+- import_playbook: setup_worker_production.yml
+
+# Create the control server
+- import_playbook: setup_control_ec2.yml
+- import_playbook: setup_control_production.yml

@@ -1,0 +1,86 @@
+---
+
+- name: Get previous commit
+  command: git rev-parse HEAD
+  args:
+   chdir: ~app/{{ param_name }}
+  changed_when: false
+  failed_when: false
+  register: check_previous_commit
+
+- set_fact:
+    previous_commit: "{{ check_previous_commit.stdout }}"
+
+- debug:
+    msg: "{{ previous_commit }}"
+
+- name: Downloading branch {{ param_branch }} from github
+  git:
+    repo: "{{ github_repository_url }}"
+    dest: ~/{{ param_name }}
+    version: "{{ param_branch }}"
+    clone: no
+    update: yes
+    force: yes
+    key_file: ~/.ssh/deploy_id_rsa
+  register: register_update_codebase
+  changed_when: register_update_codebase.after != previous_commit
+
+- name: Get changed files
+  shell: git diff --name-only {{ previous_commit }} HEAD
+  args:
+    chdir: ~/{{ param_name }}
+  changed_when: false
+  failed_when: false
+  register: check_changed_files
+
+- set_fact:
+    changed_files: "{{ check_changed_files.stdout }}"
+
+- name: Install app bundle
+  bundler:
+    state: present
+    executable: ~/.rbenv/shims/bundle
+    chdir: ~app/{{ param_name }}
+  when: "'Gemfile.lock' in changed_files"
+
+- name: Install yarn packages
+  community.general.yarn:
+    path: ~/{{ param_name }}
+  when: "'yarn.lock' in changed_files"
+
+- name: Override puma initializer
+  copy:
+    src: "roles/app_bootstrap/files/puma.rb"
+    dest: ~app/{{ param_name }}/config/puma.rb
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_puma_config == True
+
+- name: Override sidekiq initializer
+  copy:
+    src: "roles/app_bootstrap/files/sidekiq.rb"
+    dest: ~app/{{ param_name }}/config/initializers/sidekiq.rb
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_sidekiq_config == True
+
+- name: Override sidekiq config
+  copy:
+    src: "roles/app_bootstrap/files/sidekiq.yml"
+    dest: ~app/{{ param_name }}/config/sidekiq.yml
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_sidekiq_config == True
+
+- name: Override database config
+  copy:
+    src: "roles/app_bootstrap/files/database.yml"
+    dest: ~app/{{ param_name }}/config/database.yml
+    owner: app
+    group: app
+    mode: 0755
+  when: ansible_override_database_config == True

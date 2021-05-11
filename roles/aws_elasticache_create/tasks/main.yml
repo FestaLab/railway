@@ -1,0 +1,24 @@
+---
+
+- name: Obtaining configured SG for {{ ansible_environment }} env
+  amazon.aws.ec2_group_info:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Name": "{{ app_name }}-sg-{{ ansible_environment }}"
+  register: register_sg_info
+
+- name: Provisioning a {{ param_instance_type }} instance tagged as {{ app_name }}-elasticache-{{ ansible_environment }}-{{ param_name }} using {{ param_storage_type }} storage
+  community.aws.elasticache:
+    region: "{{ aws_region }}"
+    zone: "{{ aws_region }}a"
+    name: "{{ app_name }}-elasticache-{{ ansible_environment }}-{{ param_name }}"
+    state: present
+    engine: redis
+    cache_engine_version: "{{ aws_redis_version }}"
+    cache_parameter_group: "elasticache-pg-{{ param_policy }}"
+    cache_subnet_group: "{{ app_name }}-elasticache-subnet-{{ ansible_environment }}"
+    security_group_ids: "{{ register_sg_info.security_groups[0].group_id }}"
+    node_type: "{{ param_instance_type }}"
+    num_nodes: 1
+    cache_port: "{{ aws_redis_port }}"
+    wait: False

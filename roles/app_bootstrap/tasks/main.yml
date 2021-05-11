@@ -1,0 +1,8 @@
+---
+
+- meta: flush_handlers
+- import_tasks: install.yml
+- import_tasks: environment.yml
+- import_tasks: bundle.yml
+- import_tasks: deploy.yml
+- import_tasks: robots.yml

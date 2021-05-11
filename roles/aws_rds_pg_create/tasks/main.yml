@@ -1,0 +1,9 @@
+---
+
+- name: Ensuring parameter group exists
+  community.aws.rds_param_group:
+    region: "{{ aws_region }}"
+    name: "{{ app_name }}-rds-pg-{{ ansible_environment }}"
+    description: 'This is a {{ ansible_environment }} parameter group'
+    engine: "{{ aws_postgres_version_id }}"
+    state: present

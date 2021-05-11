@@ -1,0 +1,106 @@
+---
+
+- name: Ensuring VPC named {{ app_name }}-vpc-{{ ansible_environment }} exists
+  amazon.aws.ec2_vpc_net:
+    name: "{{ app_name }}-vpc-{{ ansible_environment }}"
+    cidr_block: "{{ param_vpc_cidr_block_start }}.0.0/16"
+    region: "{{ aws_region }}"
+    dns_support: yes
+    dns_hostnames: yes
+    tenancy: default
+    state: present
+    tags:
+      Name: "{{ app_name }}-vpc-{{ ansible_environment }}"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: vpc_create_result
+
+- name: Ensuring SUBNET tagged {{ app_name }}-subnet-{{ ansible_environment }}-a exists in zone a
+  amazon.aws.ec2_vpc_subnet:
+    vpc_id: "{{ vpc_create_result.vpc.id }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}a"
+    state: present
+    cidr: "{{ param_vpc_cidr_block_start }}.1.0/24"
+    map_public: yes
+    tags:
+      Name: "{{ app_name }}-subnet-{{ ansible_environment }}-a"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: subnet_create_result_a
+
+- name: Ensuring SUBNET tagged {{ app_name }}-subnet-{{ ansible_environment }}-b exists in zone b
+  amazon.aws.ec2_vpc_subnet:
+    vpc_id: "{{ vpc_create_result.vpc.id }}"
+    region: "{{ aws_region }}"
+    az: "{{ aws_region }}b"
+    state: present
+    cidr: "{{ param_vpc_cidr_block_start }}.2.0/24"
+    map_public: yes
+    tags:
+      Name: "{{ app_name }}-subnet-{{ ansible_environment }}-b"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: subnet_create_result_b
+
+- name: Ensuring ELASTICACHE-SUBNET named {{ app_name }}-elasticache-subnet-{{ ansible_environment }} exists
+  community.aws.elasticache_subnet_group:
+    region: "{{ aws_region }}"
+    name: "{{ app_name }}-elasticache-subnet-{{ ansible_environment }}"
+    description: "{{ app_name }}-cache-subnet-{{ ansible_environment }}"
+    state: present
+    subnets:
+      - "{{ subnet_create_result_a.subnet.id }}"
+      - "{{ subnet_create_result_b.subnet.id }}"
+
+- name: Ensuring RDS-SUBNET named {{ app_name }}-rds-subnet-{{ ansible_environment }} exists
+  community.aws.rds_subnet_group:
+    region: "{{ aws_region }}"
+    name: "{{ app_name }}-rds-subnet-{{ ansible_environment }}"
+    description: "{{ app_name }}-rds-subnet-{{ ansible_environment }}"
+    state: present
+    subnets:
+      - "{{ subnet_create_result_a.subnet.id }}"
+      - "{{ subnet_create_result_b.subnet.id }}"
+
+- name: Ensuring IGW tagged {{ app_name }}-igw-{{ ansible_environment }} exists
+  community.aws.ec2_vpc_igw:
+    vpc_id: "{{ vpc_create_result.vpc.id }}"
+    region: "{{ aws_region }}"
+    state: present
+    tags:
+      Name: "{{ app_name }}-igw-{{ ansible_environment }}"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: igw_create_result
+
+- name: Ensuring RTB tagged {{ app_name }}-rtb-{{ ansible_environment }} exists
+  community.aws.ec2_vpc_route_table:
+    vpc_id: "{{ vpc_create_result.vpc.id }}"
+    region: "{{ aws_region }}"
+    subnets:
+      - "{{ subnet_create_result_a.subnet.id }}"
+      - "{{ subnet_create_result_b.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw_create_result.gateway_id  }}"
+    tags:
+      Name: "{{ app_name }}-rtb-{{ ansible_environment }}"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: rtb_create_result
+
+- name: Ensuring SECURITY-GROUP named {{ app_name }}-sg-{{ ansible_environment }} exists
+  amazon.aws.ec2_group:
+    name: "{{ app_name }}-sg-{{ ansible_environment }}"
+    description: Security group that allows everything. Security will be performed by UFW
+    vpc_id: "{{ vpc_create_result.vpc.id }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        from_port: 0
+        to_port: 65535
+        cidr_ip: 0.0.0.0/0
+      - proto: udp
+        from_port: 0
+        to_port: 65535
+        cidr_ip: 0.0.0.0/0
+    tags:
+      Name: "{{ app_name }}-sg-{{ ansible_environment }}"
+      Environment: "{{ app_name }}-{{ ansible_environment }}"
+  register: security_group_create_result

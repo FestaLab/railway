@@ -1,0 +1,16 @@
+development:
+  :concurrency: 5
+  :queues:
+    - [critical, 5]
+    - [default, 2]
+    - [mailers, 1]
+    - [active_storage_analysis, 1]
+    - [active_storage_purge, 1]
+production:
+  :concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY") %>
+  :queues:
+    - [critical, 5]
+    - [default, 2]
+    - [mailers, 1]
+    - [active_storage_analysis, 1]
+    - [active_storage_purge, 1]

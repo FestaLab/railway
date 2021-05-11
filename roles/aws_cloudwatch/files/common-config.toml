@@ -1,0 +1,2 @@
+[credentials]
+shared_credential_file = "/home/app/.aws_credentials"

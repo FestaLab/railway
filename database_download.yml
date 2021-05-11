@@ -1,0 +1,24 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Get filename of the latest truncated dump from S3
+      amazon.aws.aws_s3:
+        region: "{{ aws_region }}"
+        prefix: "{{ prefix|default('full') }}"
+        bucket: "{{ aws_backup_bucket }}"
+        mode: list
+      register: backups
+
+    - set_fact:
+        filename: "{{ backups.s3_keys | sort | last }}"
+
+    - name: Downloading {{ filename }}
+      amazon.aws.aws_s3:
+        region: "{{ aws_region }}"
+        bucket: "{{ aws_backup_bucket }}"
+        object: "{{ filename }}"
+        dest: "latest.dump"
+        mode: get

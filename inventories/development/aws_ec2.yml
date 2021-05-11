@@ -1,0 +1,15 @@
+---
+plugin: aws_ec2
+
+regions:
+  - us-east-1
+
+filters:
+  tag:Environment: railway-app-development
+
+hostnames:
+- ip-address
+
+keyed_groups:
+  - key: tags.Environment
+  - key: tags.Name

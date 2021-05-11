@@ -1,0 +1,4 @@
+[default]
+s3 =
+    max_concurrent_requests = 100
+    max_queue_size = 100
