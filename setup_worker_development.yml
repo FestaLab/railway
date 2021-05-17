@@ -31,12 +31,6 @@
   remote_user: ansible
   become: yes
   roles:
-    - role: aws_cloudwatch
-      param_name: dev{{ group_id }}
-      param_group_id: "{{ group_id }}"
-      param_process_type: worker
-      tags: aws_cloudwatch
-
     - role: app_bootstrap
       param_name: dev{{ group_id }}
       param_env_vars: complete

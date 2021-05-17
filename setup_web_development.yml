@@ -32,11 +32,6 @@
   become: yes
 
   roles:
-    - role: aws_cloudwatch
-      param_name: dev{{ group_id }}
-      param_process_type: web
-      tags: aws_cloudwatch
-
     - role: app_bootstrap
       param_name: dev{{ group_id }}
       param_env_vars: complete
