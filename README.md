@@ -27,7 +27,7 @@ It relies the following services in AWS:
 4. Cloudwatch for logging and server metrics;
 5. ELB for Load Balancer;
 
-Railway does not try to be web scale. It's targeted at small dev teams (or sole developers) who have a single person who does devops on the side. It was born and battle tested at [FestaLab](https://festalab.com.br/) where we use it daily. 
+Railway does not try to be web scale. It's targeted at small dev teams (or sole developers) who have a single person who does devops on the side. It was born and battle tested at [FestaLab](https://festalab.com.br/) where we use it daily.
 
 *Leia em [portugues](https://github.com/FestaLab/railway/blob/main/README.pt.md)*.
 
@@ -35,7 +35,7 @@ Railway does not try to be web scale. It's targeted at small dev teams (or sole 
 
 This is quite a complex project to install. Check the dedicated [install guide](https://github.com/FestaLab/railway/blob/main/docs/INSTALL.MD).
 
-After that go through the [first run guide](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD) in order to get everything up and running. 
+After that go through the [first run guide](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD) in order to get everything up and running.
 
 ## Usage
 
@@ -48,6 +48,15 @@ After that go through the [day to day workflow guide](https://github.com/FestaLa
 Bug reports and pull requests are welcome on GitHub at https://github.com/FestaLab/railway. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
 
 If you with to submit pull requests, please check the [contribution guide](https://github.com/FestaLab/railway/blob/main/docs/CONTRIBUTION.MD) to make handling your credentials easier.
+
+## Todo
+
+1. Explain health check routes;
+2. Do not override application files, explain the changes instead;
+3. Temporarily remove webserver from target group during a deploy for true zero downtime;
+4. Fix Cloudwatch stream error when multiple instances use the same stream;
+5. Make contribute playbooks replace master.key and deploy key too;
+6. Cleanup how MAX_THREADS is configured in worker instances;
 
 ## License
 
