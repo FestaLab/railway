@@ -199,15 +199,13 @@ You are going to have to make changes to this project in the future, to make it 
 #### 5.1 Change the encryption password for the vaults
 First thing to do, is to change the password of the `vaults`. We are going to use two passwords. One for development, and one for production. For your own sanity, choose something you can remember and won't mind typing... a LOT.
 
-For development, execute the `decrypt` line, type `railway123` as the password, then execute the `encrypt` line and type your new password.  
+For development, execute the `encrypt` line and type your new password.  
 ```shell
-ansible-vault decrypt inventories/development/group_vars/all/vault
 ansible-vault encrypt inventories/development/group_vars/all/vault
 ```
 
-For production, execute the `decrypt` line, type `railway123` as the password, then execute the `encrypt` line and type your new password.
+For production, execute the `encrypt` line and type your new password.
 ```shell
-ansible-vault decrypt inventories/production/group_vars/all/vault
 ansible-vault encrypt inventories/production/group_vars/all/vault
 ```
 
@@ -285,8 +283,8 @@ ansible-vault edit inventories/production/group_vars/all/vault
 Go back to your fork the `railway-app`, grab the `master.key` and place it both in `roles -> app_bootstrap -> files -> development` and `roles -> app_bootstrap -> files -> production`. Then encrypt both with the correct passwords. It's the same procedure we did with the `deploy_id_rsa`.
 
 ```shell
-ansible-vault encrypt roles/app_bootstrap/files/development
-ansible-vault encrypt roles/app_bootstrap/files/production
+ansible-vault encrypt roles/app_bootstrap/files/development/master.key
+ansible-vault encrypt roles/app_bootstrap/files/production/master.key
 ```
 
 #### 5.10 Get the ID of the base Ubuntu LTS ami in your region

@@ -1,0 +1,51 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+
+  tasks:
+
+    - name: Copy to development vault to credentials folder
+      copy:
+        src: inventories/development/group_vars/all/vault
+        dest: ../railway-credentials/development_vault
+        mode: 0600
+
+    - name: Copy placeholder development vault to project folder
+      copy:
+        src: ../railway-credentials/placeholder_development_vault
+        dest: inventories/development/group_vars/all/vault
+        mode: 0600
+
+    - name: Copy production vault to credentials folder
+      copy:
+        src: inventories/production/group_vars/all/vault
+        dest: ../railway-credentials/production_vault
+        mode: 0600
+
+    - name: Copy placeholder production vault to project folder
+      copy:
+        src: ../railway-credentials/placeholder_production_vault
+        dest: inventories/production/group_vars/all/vault
+        mode: 0600
+
+    - name: Copy the development EC2 key pair to the credentials folder
+      copy:
+        src: roles/aws_ec2_create/files/ansible-ec2-development.pem
+        dest: ../railway-credentials/ansible-ec2-development.pem
+
+    - name: Clear development EC2 key pair
+      copy:
+        content: 'Replace this file with your development EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-development.pem"'
+        dest: roles/aws_ec2_create/files/ansible-ec2-development.pem
+
+    - name: Copy the production EC2 key pair to the credentials folder
+      copy:
+        src: roles/aws_ec2_create/files/ansible-ec2-production.pem
+        dest: ../railway-credentials/ansible-ec2-production.pem
+
+    - name: Clear production EC2 key pair
+      copy:
+        content: 'Replace this file with your production EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-production.pem"'
+        dest: roles/aws_ec2_create/files/ansible-ec2-production.pem
