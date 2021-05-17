@@ -81,5 +81,13 @@ These control the types of EC2, Elasticache and RDS instances that will be creat
 
 Since Railway will install Ruby with jemalloc, I recommend you chose the `C` family instead of the `M` family if you decide that the `T` is not enough for your app.
 
+### STEP 3: Health Checks
+Railway configures the load balancer to perform health checks on each webserver every few seconds. For that to work you must add this piece of code yo your apps `router.rb` file:
+```ruby
+get 'api/health_check', to: proc { [200, {}, ['']] }
+```
+
+This route will simply return code `200` when anyone tries to access `api/health_check` on your instances. This tells the load balancer the instance is up and receiving requests.
+
 ### You are done
 For now this is it for the customization guide. To finish, head to the [day to day workflow guide](https://github.com/FestaLab/railway/blob/main/docs/DAY_TO_DAY_WORKFLOW.MD).

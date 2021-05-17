@@ -51,12 +51,10 @@ If you with to submit pull requests, please check the [contribution guide](https
 
 ## Todo
 
-1. Explain health check routes;
-2. Do not override application files, explain the changes instead;
-3. Temporarily remove webserver from target group during a deploy for true zero downtime;
-4. Fix Cloudwatch stream error when multiple instances use the same stream;
-5. Make contribute playbooks replace master.key and deploy key too;
-6. Cleanup how MAX_THREADS is configured in worker instances;
+1. Do not override application files, explain the changes instead;
+2. Temporarily remove webserver from target group during a deploy for true zero downtime;
+3. Fix Cloudwatch stream error when multiple instances use the same stream;
+4. Cleanup how MAX_THREADS is configured in worker instances;
 
 ## License
 
