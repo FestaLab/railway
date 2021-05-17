@@ -1,0 +1,25 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+
+
+  tasks:
+
+    - name: Ensure credentials folder exist
+      file:
+        path: ../railway-credentials
+        state: directory
+        mode: 0755
+
+    - name: Copy placeholder development vault to credentials folder
+      copy:
+        src: "inventories/development/group_vars/all/vault"
+        dest: ../railway-credentials/placeholder_development_vault
+        mode: 0600
+
+    - name: Copy placeholder production vault to credentials folder
+      copy:
+        src: "inventories/development/group_vars/all/vault"
+        dest: ../railway-credentials/placeholder_production_vault
+        mode: 0600
