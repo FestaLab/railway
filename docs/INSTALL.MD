@@ -1,7 +1,7 @@
 # INSTALL
 
 Before we start, let's set some expectations: **this is not going to be easy**. There are a lot of things involved in getting your machine and your AWS/Github accounts properly configured to use this project. And then even more to get it working with your own rails apps. After you are done with this install guide, you still have to go through the "[First Run](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD)" guide to get your AWS infrastructure up and running.
- 
+
 This is why I'll suggest that you use the [railway-app](https://github.com/FestaLab/railway_app) for your first deploy to AWS. It's a small rails app that has just enough functionality to ensure all parts of the setup are working. This way you can be sure that any problems you run into are related to Ansible or AWS, not something in your app that you forgot to configure in your app.
 
 Also, this is not going to be cheap and it most definitely won't fit the free tier. This project is supposed to handle the devops needs a small tech company. If you bring up both development and production environments, we are talking about, at a minimum, 6 EC2, 3 RDS, 4 elasticache, 2 Load Balancer, plus Cloudwatch.
@@ -13,7 +13,7 @@ Here are a few things you should know:
 
 1. Think of Ansible as a way to automate everything that linux administrators used to do by hand;
 2. A `task` is an instruction for Ansible to do something. e.g.: download a file, execute a command, set a permission, etc.;
-3. A `role` is a combination of `tasks` that together do something useful. e.g.: build libvips from source, install Cloudwatch integration, etc.;  
+3. A `role` is a combination of `tasks` that together do something useful. e.g.: build libvips from source, install Cloudwatch integration, etc.;
 4. A `playbook` is a combination of `roles` that together automate a major part of your day to day devops work. e.g.: deploy your app, create a new AMI, etc.;
 4. An `inventory` is a list of EC2 instances that Ansible will control. Railway has an inventory for production and another for QA of branches;
 5. Files called `var` contain variables. e.g.: the version of ruby you use, the url of the repository your project is in, etc.;
@@ -111,7 +111,7 @@ There are a few things that Railway cannot do automatically for you in AWS, so w
 #### 3.1 IAM Roles
 First we are going to create two users with program for ansible. Go to `IAM -> Users -> Add User`.
 
-Name the first one `ansible-readonly`, give it `Programmatic access` and on the next step choose `Attach existing policies directly`. Add the following:  
+Name the first one `ansible-readonly`, give it `Programmatic access` and on the next step choose `Attach existing policies directly`. Add the following:
 1. `AmazonEC2ReadOnlyAccess`
 2. `AmazonVPCReadOnlyAccess`
 3. `AmazonElastiCacheReadOnlyAccess`
@@ -140,7 +140,7 @@ Go to `IAM -> Roles -> Create Role`.
 
 Click `Next`. Look for a policy called `CloudWatchAgentServerPolicy` and check it. This will allow our EC2 instances to send logs and collectd metrics to Cloudwatch.
 
-You can skip adding Tags. 
+You can skip adding Tags.
 
 Give the role the name `railway-iam-ec2-role`. Click `Create Role`.
 
@@ -183,7 +183,7 @@ Head to `S3 -> Buckets` and click `Create a bucket`.
 Click "Create bucket". Store the bucket name somewhere. We will need it later
 
 ### STEP 4: Fork the companion app
-To deploy new versions of the your app Ansible will need to have access to the repository's deploy key.  
+To deploy new versions of the your app Ansible will need to have access to the repository's deploy key.
 
 Since we are going to use the `railway-app` to test our installation, go ahead and [fork it](https://github.com/FestaLab/railway-app).
 
@@ -199,13 +199,15 @@ You are going to have to make changes to this project in the future, to make it 
 #### 5.1 Change the encryption password for the vaults
 First thing to do, is to change the password of the `vaults`. We are going to use two passwords. One for development, and one for production. For your own sanity, choose something you can remember and won't mind typing... a LOT.
 
-For development, execute the `encrypt` line and type your new password.  
+For development, execute the `decrypt` line, type `railway123` as the password, then execute the `encrypt` line and type your new password.
 ```shell
+ansible-vault decrypt inventories/development/group_vars/all/vault
 ansible-vault encrypt inventories/development/group_vars/all/vault
 ```
 
-For production, execute the `encrypt` line and type your new password.
+For production, execute the `decrypt` line, type `railway123` as the password, then execute the `encrypt` line and type your new password.
 ```shell
+ansible-vault decrypt inventories/production/group_vars/all/vault
 ansible-vault encrypt inventories/production/group_vars/all/vault
 ```
 
@@ -238,7 +240,7 @@ aws_backup_bucket: railway-rds-backups
 #### 5.6 Insert and protect your deploy key
 Now we are going to start using the vaults and Ansible's file encryption to secure our keys and credentials.
 
-In the folder `roles -> ansible_credentials -> app_bootstrap -> files` you will find two folders named `development` and `production` with an empty file called `deploy_id_rsa` inside. 
+In the folder `roles -> ansible_credentials -> app_bootstrap -> files` you will find two folders named `development` and `production` with an empty file called `deploy_id_rsa` inside.
 
 Copy the content of the **private** deploy key you created on step 3 to BOTH of them. I know this sounds weird but there is a reason for that: every time you execute an Ansible playbook, it will ask for the password of the vault. It will then also use that password to decrypt every encrypted file it encounters. Since we are going to use different passwords for development and production, we also need to have the deploy key encrypted with two different password.
 
@@ -265,15 +267,15 @@ Let's start with the development vault.
 ansible-vault edit inventories/development/group_vars/all/vault
 ```
 
-Ansible will open the file in VIM, and you will see it has 6 entries. 
+Ansible will open the file in VIM, and you will see it has 6 entries.
 
-Replace `vault_aws_access_key` and `vault_aws_secret_key` with the credentials of your READ ONLY user. 
+Replace `vault_aws_access_key` and `vault_aws_secret_key` with the credentials of your READ ONLY user.
 
-Replace `vault_aws_certificate_arn` with the ARN of the certificate we created in step 3.3. You can find it by going to `Certificate Manager`, clicking the certificate and looking for `ARN`. The value should start with `arn:aws:acm`. 
+Replace `vault_aws_certificate_arn` with the ARN of the certificate we created in step 3.3. You can find it by going to `Certificate Manager`, clicking the certificate and looking for `ARN`. The value should start with `arn:aws:acm`.
 
 Replace `vault_aws_rds_username`, `vault_aws_rds_password` and `vault_aws_rds_database` with values of your choice. If you are a lazy person like me, just go into one of your rails projects and execute `ActiveStorage::Blob.generate_unique_secure_token` three times, using them as username, password and database (make sure your database name and user name start with a letter)
 
-Repeat the procedure for the production vault, but this time give it the credentials of the FULL ACCESS user. 
+Repeat the procedure for the production vault, but this time give it the credentials of the FULL ACCESS user.
 
 ```shell
 ansible-vault edit inventories/production/group_vars/all/vault
@@ -295,7 +297,7 @@ Next, go into the global vars file of this project, located in `group_vars -> al
 aws_ami_id: ami-09e67e426f25ce0d7
 ```
 
-### STEP 6: Run the bootstrap playbooks 
+### STEP 6: Run the bootstrap playbooks
 Finally we have to run one or two playbooks, depending on your role.
 
 ### 6.1 You and every developer that should have access to the development environment

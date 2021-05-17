@@ -7,24 +7,48 @@
 
   tasks:
 
-    - name: Copy development vault to project
+    - name: Copy development vault to the project
       copy:
         src: ../railway-credentials/development_vault
         dest: inventories/development/group_vars/all/vault
         mode: 0600
 
-    - name: Copy production vault to project
+    - name: Copy production vault to the project
       copy:
         src: ../railway-credentials/production_vault
         dest: inventories/production/group_vars/all/vault
         mode: 0600
 
-    - name: Copy development EC2 key pair to project
+
+
+    - name: Copy development EC2 key pair to the project
       copy:
         src: ../railway-credentials/ansible-ec2-development.pem
         dest: roles/aws_ec2_create/files/ansible-ec2-development.pem
 
-    - name: Copy production EC2 key pair to project
+    - name: Copy production EC2 key pair to the project
       copy:
         src: ../railway-credentials/ansible-ec2-production.pem
         dest: roles/aws_ec2_create/files/ansible-ec2-production.pem
+
+
+    - name: Copy the development deploy key to the project
+      copy:
+        src: ../railway-credentials/development_deploy_id_rsa
+        dest: roles/app_bootstrap/files/development/deploy_id_rsa
+
+    - name: Copy the production deploy key to the project
+      copy:
+        src: ../railway-credentials/production_deploy_id_rsa
+        dest: roles/app_bootstrap/files/production/deploy_id_rsa
+
+
+    - name: Copy the development master key to the project
+      copy:
+        src: ../railway-credentials/development_master.key
+        dest: roles/app_bootstrap/files/development/master.key
+
+    - name: Copy the production master key to the project
+      copy:
+        src: ../railway-credentials/production_master.key
+        dest: roles/app_bootstrap/files/production/master.key

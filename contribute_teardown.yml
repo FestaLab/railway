@@ -30,6 +30,8 @@
         dest: inventories/production/group_vars/all/vault
         mode: 0600
 
+
+
     - name: Copy the development EC2 key pair to the credentials folder
       copy:
         src: roles/aws_ec2_create/files/ansible-ec2-development.pem
@@ -49,3 +51,47 @@
       copy:
         content: 'Replace this file with your production EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-production.pem"'
         dest: roles/aws_ec2_create/files/ansible-ec2-production.pem
+
+
+
+    - name: Copy the development deploy key credentials folder
+      copy:
+        src: roles/app_bootstrap/files/development/deploy_id_rsa
+        dest: ../railway-credentials/development_deploy_id_rsa
+
+    - name: Clear development deploy key
+      copy:
+        content: 'Replace this file with your private deploy key and encrypt it with "ansible-vault encrypt roles/app_bootstrap/files/development/deploy_id_rsa"'
+        dest: roles/app_bootstrap/files/development/deploy_id_rsa
+
+    - name: Copy the production deploy key credentials folder
+      copy:
+        src: roles/app_bootstrap/files/production/deploy_id_rsa
+        dest: ../railway-credentials/production_deploy_id_rsa
+
+    - name: Clear production deploy key
+      copy:
+        content: 'Replace this file with your private deploy key and encrypt it with "ansible-vault encrypt roles/app_bootstrap/files/production/deploy_id_rsa"'
+        dest: roles/app_bootstrap/files/production/deploy_id_rsa
+
+
+
+    - name: Copy the development master key credentials folder
+      copy:
+        src: roles/app_bootstrap/files/development/master.key
+        dest: ../railway-credentials/development_master.key
+
+    - name: Remove the development master.key
+      file:
+        path: roles/app_bootstrap/files/development/master.key
+        state: absent
+
+    - name: Copy the production master key credentials folder
+      copy:
+        src: roles/app_bootstrap/files/production/master.key
+        dest: ../railway-credentials/production_master.key
+
+    - name: Remove the production master.key
+      file:
+        path: roles/app_bootstrap/files/production/master.key
+        state: absent
