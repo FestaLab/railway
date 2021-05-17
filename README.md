@@ -47,6 +47,8 @@ After that go through the [day to day workflow guide](https://github.com/FestaLa
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/FestaLab/railway. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
 
+If you with to submit pull requests, please check the [contribution guide](https://github.com/FestaLab/railway/blob/main/docs/CONTRIBUTION.MD) to make handling your credentials easier.
+
 ## License
 
 The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
