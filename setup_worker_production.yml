@@ -33,6 +33,7 @@
   roles:
     - role: aws_cloudwatch
       param_name: "{{ ansible_environment }}"
+      param_hostname: "worker{{ play_hosts.index(inventory_hostname) }}"
       param_process_type: worker
       tags: aws_cloudwatch
 
