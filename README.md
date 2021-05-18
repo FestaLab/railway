@@ -52,9 +52,9 @@ If you with to submit pull requests, please check the [contribution guide](https
 ## Todo
 
 1. Do not override application files, explain the changes instead;
-2. Temporarily remove webserver from target group during a deploy for true zero downtime;
-3. Fix Cloudwatch stream error when multiple instances use the same stream;
-4. Cleanup how MAX_THREADS is configured in worker instances;
+2. Temporarily remove webserver from target group during a deploy for true zero downtime deploys;
+3. Cleanup how MAX_THREADS is configured in worker instances;
+4. Write teardown playbooks;
 
 ## License
 
@@ -62,5 +62,5 @@ The project is available as open source under the terms of the [MIT License](htt
 
 ## Code of Conduct
 
-Everyone interacting in the Railwat project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Railway project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
 
