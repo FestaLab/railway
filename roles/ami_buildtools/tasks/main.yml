@@ -26,29 +26,36 @@
     update_cache: False
   vars:
     packages:
-      - libgsf-1-dev
-      - libpq-dev
-      - libtiff5-dev
-      - libjpeg-turbo8-dev
-      - libexif-dev
-      - librsvg2-dev
-      - libpng-dev
-      - libwebp-dev
-      - libgif-dev
-      - libmatio-dev
+      - libbrotli-dev
+      - libcairo2-dev
       - libcfitsio-dev
+      - libcurl4-openssl-dev
+      - libexif-dev
+      - libexpat1-dev
+      - libffi-dev
+      - libfftw3-dev
+      - libgif-dev
+      - libglib2.0-dev
+      - libgsf-1-dev
+      - libheif-dev
+      - libimagequant-dev
+      - libjemalloc-dev
+      - libjpeg-turbo8-dev
+      - liblcms2-dev
+      - libmatio-dev
       - libopenexr-dev
       - libopenslide-dev
-      - libheif-dev
-      - libgsf-1-dev
-      - libfftw3-dev
-      - liblcms2-dev
-      - libimagequant-dev
       - liborc-0.4-dev
-      - libcairo2-dev
       - libpango1.0-dev
-      - libbrotli-dev
-      - libexpat1-dev
-      - libglib2.0-dev
+      - libpng-dev
+      - libpq-dev
+      - libreadline-dev
+      - librsvg2-dev
       - libssl-dev
+      - libtiff5-dev
+      - libwebp-dev
+      - libxml2-dev
+      - libxslt1-dev
+      - libyaml-dev
+      - zlib1g-dev
 

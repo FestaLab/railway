@@ -1,40 +1,8 @@
 
 ---
 
-- name: Install Ruby development headers 
-  apt:
-    name: "{{ packages }}" 
-    state: present 
-    update_cache: False
-  vars:
-    packages:
-    - libffi-dev
-    - libssl-dev
-    - libreadline-dev 
-    - libyaml-dev
-    - libjemalloc-dev
-    - libxml2-dev
-    - libxslt1-dev
-    - libcurl4-openssl-dev 
-    - zlib1g-dev
-
-- name: Install build tools 
-  apt:
-    name: "{{ packages }}" 
-    state: present 
-    update_cache: False
-  vars:
-    packages:
-      - autoconf 
-      - bison
-      - gcc
-      - make
-      - build-essential   
-      - software-properties-common
-      - gcc
-
-- name: Install Ruby {{ param_version }} for app
-  shell: $(which su) - app -c "RUBY_CONFIGURE_OPTS='--with-jemalloc' rbenv install {{ param_version }} --verbose >> ~/ruby_log.txt"
+- name: "Install Ruby {{ param_version }} for app with config: {{ ansible_ruby_build_config }}"
+  shell: $(which su) - app -c "{{ ansible_ruby_build_config }} rbenv install {{ param_version }} --verbose >> ~/ruby_log.txt"
   args:
     creates: ~app/.rbenv/versions/{{ param_version }}
 

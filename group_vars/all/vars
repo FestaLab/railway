@@ -29,3 +29,4 @@ ansible_build_image_libs: false
 ansible_use_static_build_for_ffmpeg: false
 ansible_libvips_version: 8.10.6
 ansible_imagemagick_version: 7.0.11-12
+ansible_ruby_build_config: RUBY_CONFIGURE_OPTS='--with-jemalloc' RUBY_CFLAGS='-march=native -O3'
