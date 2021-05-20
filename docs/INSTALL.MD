@@ -94,11 +94,11 @@ It should show `Python 3.8.10`. We are done here. Go to STEP 2.
 ### STEP 2: Install Ansible
 Now that the preparation steps are out of the way, let's install Ansible:
 ```
-pip install --upgrade pip
-pip install ansible
+pip install wheel
+pip install ansible==4.0.0 --user
 ```
 
-Then all the modules that Railway relies on:
+Close your current terminal window (or ssh session if you are using Vagrant) and open a new one. Then install all the modules that Railway relies on:
 ```
 ansible-galaxy collection install amazon.aws
 ansible-galaxy collection install ansible.posix
