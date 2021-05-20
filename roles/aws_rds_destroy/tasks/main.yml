@@ -1,0 +1,7 @@
+---
+
+- name: Destroying RDS instance tagged as {{ app_name }}-db-{{ ansible_environment }}
+  community.aws.rds:
+    region: "{{ aws_region }}"
+    command: delete
+    instance_name: "{{ app_name }}-db-{{ ansible_environment }}"
