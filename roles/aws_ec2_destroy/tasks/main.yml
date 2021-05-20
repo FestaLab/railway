@@ -1,6 +1,6 @@
 ---
 
-- name: Destroying instance(s) with id(s) {{ param_instance_id }}
+- name: Destroying EC2 instance(s) with id(s) {{ param_instance_id }}
   amazon.aws.ec2:
     region: "{{ aws_region }}"
     instance_ids: "{{ param_instance_id|trim }}"

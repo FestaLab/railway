@@ -18,7 +18,7 @@ With this done, you can now go through STEP 5 of the INSTALL.MD file to get your
 ### Teardown
 After you are done and are ready to open your PR, run the teardown playbook:
 ```shell
-ansible-playbook contribute_bootstrap.yml
+ansible-playbook contribute_teardown.yml
 ```
 
 This playbook will:
@@ -30,6 +30,11 @@ This playbook will:
 6 - Clear the development key pair file;
 7 - Copy your current development key pair to `railway-credentials`;
 8 - Clear the development key pair file;
+
+Then also run the teardown playbook to AWS, so it removes every resource that costs money:
+```shell
+ansible-playbook teardown_aws.yml
+```
 
 ### Setup
 If you need to make any changes to your PR, or want to work on something else, instead of doing STEP 5 all over again, you can just run the setup playbook:

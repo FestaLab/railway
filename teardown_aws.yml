@@ -1,0 +1,36 @@
+---
+
+- hosts: localhost
+  gather_facts: False
+  pre_tasks:
+
+    - community.aws.ec2_instance_info:
+        region: "{{ aws_region }}"
+        filters:
+          "tag:Name": "{{ app_name }}-ec2-{{ ansible_environment }}-*"
+          instance-state-name: ["running"]
+      register: running
+
+    - set_fact:
+        ec2_instances: "{{ running.instances | map(attribute='instance_id') }}"
+
+
+  roles:
+    - role: aws_rds_destroy
+      param_name: development
+      tags: aws_rds_destroy
+
+    - role: aws_elasticache_destroy
+      param_name: "cache"
+      tags: aws_elasticache_destroy
+
+    - role: aws_elasticache_destroy
+      param_name: "job"
+      tags: aws_elasticache_destroy
+
+    - role: aws_ec2_destroy
+      param_instance_id: "{{ ec2_instances }}"
+      tags: aws_elasticache_destroy
+
+    - role: aws_alb_destroy
+      tags: aws_alb_destroy

@@ -1,0 +1,8 @@
+---
+
+- name: Destroying elasticache instance tagged as {{ app_name }}-elasticache-{{ ansible_environment }}-{{ param_name }}
+  community.aws.elasticache:
+    region: "{{ aws_region }}"
+    name: "{{ app_name }}-elasticache-{{ ansible_environment }}-{{ param_name }}"
+    state: absent
+    wait: False
