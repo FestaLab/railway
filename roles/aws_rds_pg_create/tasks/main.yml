@@ -3,7 +3,10 @@
 - name: Ensuring parameter group exists
   community.aws.rds_param_group:
     region: "{{ aws_region }}"
-    name: "{{ app_name }}-rds-pg-{{ ansible_environment }}"
-    description: 'This is a {{ ansible_environment }} parameter group'
+    name: "{{ app_name }}-rds-pg-{{ aws_postgres_version_id }}"
+    description: 'Parameter group for {{ aws_postgres_version_id }}'
     engine: "{{ aws_postgres_version_id }}"
     state: present
+    params:
+      max_standby_archive_delay: -1
+      max_standby_streaming_delay: -1

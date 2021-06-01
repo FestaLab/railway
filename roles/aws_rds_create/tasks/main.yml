@@ -1,15 +1,5 @@
 ---
 
-- name: Ensuring parameter group named {{ app_name }}-sg-{{ ansible_environment }} exists
-  community.aws.rds_param_group:
-    state: present
-    name: "{{ app_name }}-sg-{{ ansible_environment }}"
-    description: 'Postgres 13 parameter group'
-    engine: 'postgres13'
-    params:
-      max_standby_archive_delay: -1
-      max_standby_streaming_delay: -1
-
 - name: Obtaining the ID of the recently created group
   amazon.aws.ec2_group_info:
     region: "{{ aws_region }}"
@@ -28,7 +18,7 @@
     instance_name: "{{ app_name }}-db-{{ ansible_environment }}"
     instance_type: "{{ param_instance_type }}"
     maint_window: "Tue:06:00-Tue:08:00"
-    parameter_group: "{{ app_name }}-rds-pg-{{ ansible_environment }}"
+    parameter_group: "{{ app_name }}-rds-pg-{{ aws_postgres_version_id }}"
     password: "{{ aws_rds_password }}"
     port: 5432
     publicly_accessible: yes
