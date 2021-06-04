@@ -1,4 +1,4 @@
-# CUSTOMIZATION
+# CUSTOMIZATION: ANSIBLE AND AWS
 
 Here you can change Ansible behavior and the AWS resources that will be created.
 
@@ -120,13 +120,13 @@ The `c` family has the best processors for the lowest prices. They come with "on
 ### App
 The values here are extremely important.
 
-`app_max_threads`: How many threads each Puma worker will have, and how many connections to the database each Puma worker can use;
-`app_puma_concurrency`: How many workers the Puma process will have;
-`app_sidekiq_concurrency`: How many threads the Sidekiq process will have;
+- `app_max_threads`: How many threads each Puma worker will have, and how many connections to the database each Puma worker can use;
+- `app_puma_concurrency`: How many workers the Puma process will have;
+- `app_sidekiq_concurrency`: How many threads the Sidekiq process will have;
 
 If you already have an app in production you are probably familiar with the correct values for each of these, but let's review:
-`app_max_threads`: 3 is good enough, 5 if you must;
-`app_puma_concurrency`: 1 per vCPU in your EC2 instance;
-`app_sidekiq_concurrency`: 10 or less. Sidekiq [does not like high concurrency](https://github.com/mperham/sidekiq/issues/3892);
+- `app_max_threads`: 3 is good enough, 5 if you must;
+- `app_puma_concurrency`: 1 per vCPU in your EC2 instance;
+- `app_sidekiq_concurrency`: 10 or less. Sidekiq [does not like high concurrency](https://github.com/mperham/sidekiq/issues/3892);
 
 If you are worried about that connection pool of `3` with a concurrency of `10` for Sidekiq, don't be. The [unit file](https://github.com/FestaLab/railway/blob/main/roles/app_worker_server/templates/sidekiq.service.j2) will override that value and set it to `app_sidekiq_concurrency + 3`.
