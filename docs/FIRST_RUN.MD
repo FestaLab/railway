@@ -112,7 +112,7 @@ Install every package a Rails app needs, and configures the ones that are alread
 14. Install ffmpeg;
 15. Install poppler;
 16. Install Imagegick and libvips;
-17. Install the latest ruby version with jmalloc;
+17. Install the latest ruby version with jemalloc;
 
 If you need more packages feel free to add them here.
 
