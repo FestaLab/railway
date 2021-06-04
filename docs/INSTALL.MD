@@ -1,12 +1,21 @@
 # INSTALL
 
-Before we start, let's set some expectations: **this is not going to be easy**. There are a lot of things involved in getting your machine and your AWS/Github accounts properly configured to use this project. And then even more to get it working with your own rails apps. After you are done with this install guide, you still have to go through the "[First Run](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD)" guide to get your AWS infrastructure up and running.
+Before we start, let's set some expectations: **this is not going to be easy**. There are a lot of things involved in getting your computer and your AWS/Github accounts properly configured to use this project. And then even more to get it working with your own rails apps. After you are done with this install guide, you still have to go through the [First Run](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD) guide to get your AWS infrastructure up and running.
 
 This is why I'll suggest that you use the [railway-app](https://github.com/FestaLab/railway_app) for your first deploy to AWS. It's a small rails app that has just enough functionality to ensure all parts of the setup are working. This way you can be sure that any problems you run into are related to Ansible or AWS, not something in your app that you forgot to configure in your app.
 
-Also, this is not going to be cheap and it most definitely won't fit the free tier. This project is supposed to handle the devops needs a small tech company. If you bring up both development and production environments, we are talking about, at a minimum, 6 EC2, 3 RDS, 4 elasticache, 2 Load Balancer, plus Cloudwatch.
+Also, this is not going to be cheap and it most definitely won't fit the free tier. This project is supposed to handle the devops of production app that. If you bring up both development and production environments, we are talking about, at a minimum, 6 EC2, 3 RDS, 4 elasticache, 2 Load Balancer, plus Cloudwatch.
 
 Finally, if you are only checking Railway out of curiosity and would prefer to not have to uninstall everything by hand later, I recommend using Vagrant. In fact, everything I've written in these guides, I tested in a Vagrant box using `ubuntu/focal64`.
+
+### What's In this Guide?
+1. CliffsNotes on Ansible: A quick intro to some Ansible terminology and concepts;
+2. Prelight Check: Installs python in your computer, which Ansible needs to work;
+3. Install Ansible: Install both Ansible and its various modules;
+4. Configure your AWS region of choice: Instructions on how to configure IAM Roles, Key pairs, etc;
+5. Fork the companion app: Instructions on how to fork and create a deploy key for the app;
+6. Fork this project: Instructions on changing encryption passwords and securing credentials;
+7. Run the bootstrap playbook: Installs credentials and keypairs from step 4 in your computer;
 
 ### CliffsNotes on Ansible
 Here are a few things you should know:
@@ -109,7 +118,7 @@ ansible-galaxy collection install community.general
 There are a few things that Railway cannot do automatically for you in AWS, so we will handle those now.
 
 #### 3.1 IAM Roles
-First we are going to create two users with program for ansible. Go to `IAM -> Users -> Add User`.
+First we are going to create two users with programmatic access for Ansible. Log into your AWS console and go to `IAM -> Users -> Add User`.
 
 Name the first one `ansible-readonly`, give it `Programmatic access` and on the next step choose `Attach existing policies directly`. Add the following:
 1. `AmazonEC2ReadOnlyAccess`
@@ -140,7 +149,7 @@ Go to `IAM -> Roles -> Create Role`.
 
 Click `Next`. Look for a policy called `CloudWatchAgentServerPolicy` and check it. This will allow our EC2 instances to send logs and collectd metrics to Cloudwatch.
 
-You can skip adding Tags.
+You can skip adding tags.
 
 Give the role the name `railway-iam-ec2-role`. Click `Create Role`.
 
@@ -158,7 +167,7 @@ After you click `Create key pair` again, the file will be automatically download
 Store their credentials somewhere for now. In step 3 we will encrypt them using Ansible.
 
 #### 3.3 Server certificates
-To get https working we have to create a certificate for ELB to use. So head to `Certificate Manager` and under `Provision Certificates` click  `Get Started`.
+To get SSL working we have to create a certificate for Amazon's load balancer (ELB) to use. So head to `Certificate Manager` and under `Provision Certificates` click  `Get Started`.
 
 1. Choose `Request public certificate`, then click `Request a certificate`;
 2. In `Domain name`, type in the domain you will use for your app, then click `Next`;
