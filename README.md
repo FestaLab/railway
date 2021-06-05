@@ -29,32 +29,21 @@ It relies the following services in AWS:
 
 Railway does not try to be web scale. It's targeted at small dev teams (or sole developers) who have a single person who does devops on the side. It was born and battle tested at [FestaLab](https://festalab.com.br/) where we use it daily.
 
-*Leia em [portugues](https://github.com/FestaLab/railway/blob/main/README.pt.md)*.
+## Where do I start?
+I've always been a fan of those "choose your own adventure" game books, so let's do the same here:
 
-## Installation
-
-This is quite a complex project to install. Check the dedicated [install guide](https://github.com/FestaLab/railway/blob/main/docs/INSTALL.MD).
-
-After that go through the [first run guide](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD) in order to get everything up and running.
-
-## Usage
-
-Again, quite complex. Check the dedicated [customization guide](https://github.com/FestaLab/railway/blob/main/docs/CUSTOMIZATION.MD) to learn how to adapt this project to your app.
-
-After that go through the [day to day workflow guide](https://github.com/FestaLab/railway/blob/main/docs/DAY_TO_DAY_WORKFLOW.MD) to learn how to use Railway to handle your devops needs.
+- If you are not sure about this whole moving from Heroku to AWS thing, [click here](https://github.com/FestaLab/railway/blob/main/docs/WHY_DO_THIS.MD)
+- If you would like to know more about the infrastructure that Railway will create, [click here](https://github.com/FestaLab/railway/blob/main/docs/THE_PARTS_OF_RAILWAY.MD)
+- If you are ready to start your journey, [click here](https://github.com/FestaLab/railway/blob/main/docs/INSTALL.MD)
+- If you have already done the install steps and want to bring up the infrastucture, [click here](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD)
+- If you already have the sample app running, and need to change things to make your app work with Railway, [click here](https://github.com/FestaLab/railway/blob/main/docs/CUSTOMIZATION.MD)
+- If your app is running in production and you want to know to handle your day to day needs, [click here](https://github.com/FestaLab/railway/blob/main/docs/DAY_TO_DAY_WORKFLOW.MD)
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/FestaLab/railway. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
 
 If you with to submit pull requests, please check the [contribution guide](https://github.com/FestaLab/railway/blob/main/docs/CONTRIBUTION.MD) to make handling your credentials easier.
-
-## Todo
-
-1. Do not override application files, explain the changes instead;
-2. Temporarily remove webserver from target group during a deploy for true zero downtime deploys;
-3. Cleanup how MAX_THREADS is configured in worker instances;
-4. Write teardown playbooks;
 
 ## License
 
