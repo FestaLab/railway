@@ -77,7 +77,7 @@ When you deploy on Heroku, you are not actually downloading a new version of you
 8. Generate a new slug (image) of the result;
 9. Run `db:migrate`   
 10. Create new dynos using said slug;
-11. Kill the existing dynos (if you have cold boot enabled they will only be killed after all traffic is moved to the new dynos;
+11. Kill the existing dynos (if you have preboot enabled they will only be killed after all traffic is moved to the new dynos);
 
 When you deploy on Railway, the process is different:
 1. SSH into each server web server, one by one;
@@ -88,7 +88,7 @@ When you deploy on Railway, the process is different:
 6. Run `db:migrate`;
 6. Perform a rolling restart of Puma and Sidekiq;
 
-Because Railway does not have to install Ruby and other packages, and because it retains the existing EC2 instances, it is much, much faster at deploys than Heroku. It takes seconds for Railway to have all requests to your app running the new code. By comparison, Heroku goes through a minutes long (10 in my apps case) slug compilation step, then a 3-7 minutes cold boot process.
+Because Railway does not have to install Ruby and other packages, and because it retains the existing EC2 instances, it is much, much faster at deploys than Heroku. It takes seconds for Railway to have all requests to your app running the new code. By comparison, Heroku goes through a minutes long (10 in my apps case) slug compilation step, then a 3-7 minutes preboot process.
 
 On the other hand, Heroku has a serious advantage when it comes to scaling. Since Heroku always has an up to date image (the slug), scaling up is as fast simple as booting the dynos. On the other hand, Railway starts from an outdated AMI, which it then has to execute a normal deploy process.
 
