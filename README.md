@@ -32,12 +32,12 @@ Railway does not try to be web scale. It's targeted at small dev teams (or sole 
 ## Where do I start?
 I've always been a fan of those "choose your own adventure" game books, so let's do the same here:
 
-- If you are not sure about this whole moving from Heroku to AWS thing, [click here](https://github.com/FestaLab/railway/blob/main/docs/WHY_DO_THIS.MD)
-- If you would like to know more about the infrastructure that Railway will create, [click here](https://github.com/FestaLab/railway/blob/main/docs/THE_PARTS_OF_RAILWAY.MD)
-- If you are ready to start your journey, [click here](https://github.com/FestaLab/railway/blob/main/docs/INSTALL.MD)
-- If you have already done the install steps and want to bring up the infrastucture, [click here](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD)
-- If you already have the sample app running, and need to change things to make your app work with Railway, [click here](https://github.com/FestaLab/railway/blob/main/docs/CUSTOMIZATION.MD)
-- If your app is running in production and you want to know to handle your day to day needs, [click here](https://github.com/FestaLab/railway/blob/main/docs/DAY_TO_DAY_WORKFLOW.MD)
+- If you are not sure about this whole moving from Heroku to AWS thing, [click here](https://github.com/FestaLab/railway/blob/main/docs/WHY_DO_THIS.MD);
+- If you would like to know more about the infrastructure that Railway will create, [click here](https://github.com/FestaLab/railway/blob/main/docs/THE_PARTS_OF_RAILWAY.MD);
+- If you are ready to start your journey, [click here](https://github.com/FestaLab/railway/blob/main/docs/INSTALL.MD);
+- If you have already done the install steps and want to bring up the infrastucture, [click here](https://github.com/FestaLab/railway/blob/main/docs/FIRST_RUN.MD);
+- If you already have the sample app running, and need to change things to make your app work with Railway, [click here](https://github.com/FestaLab/railway/blob/main/docs/CUSTOMIZATION.MD);
+- If your app is running in production and you want to know to handle your day to day needs, [click here](https://github.com/FestaLab/railway/blob/main/docs/DAY_TO_DAY_WORKFLOW.MD);
 
 ## Contributing
 
