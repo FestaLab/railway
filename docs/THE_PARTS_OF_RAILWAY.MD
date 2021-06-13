@@ -10,8 +10,8 @@ To make Railway's infrastructure easier to understand for those that have never 
 | Worker Server    | Worker Dynos     | EC2 with Sidekiq service      |
 | Database         | Heroku Postgres  | RDS with Postgres Engine      |
 | Redis            | Heroku Redis     | Elasticache with Redis Engine |
-| Logs             | LogPlex          | Cloudwatch                    |
-| Metrics          | Dashboard        | Cloudwatch                    |
+| Logs             | LogPlex          | Cloudwatch Logs/Insights      |
+| Metrics          | Dashboard        | Cloudwatch Metrics/Dashboards |
 | Load Balancer    | Heroku Router    | ELB and Target Groups         |
 | Environment Vars | Config vars      | `.rbenv-vars` file            |
 
@@ -160,7 +160,7 @@ What does each line mean?
 - `ExecStart`: This is the command that will be executed by this unit. As you can see, it is roughly equivalent to the `web:` line in Heroku's Procfile
 - `Restart`: Tells `systemd` when it should attempt to restart the service after has failed.
 
-If I were to translate this, this file is saying: "Systemd, when this EC2 instance boots, after both logging and network services have started, I want you to use this command to run puma. If Puma doesn't send you a ping for longer than 10 seconds, I want you to forcibly restart it."
+If I were to translate, this file is saying: "Systemd, when this EC2 instance boots, wait until the logging and network services have started then use this command to run puma. If Puma doesn't send you a ping for longer than 10 seconds, I want you to forcibly restart it."
 
 What about Sidekiq? Almost the same:
 ```
@@ -183,6 +183,6 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-If you ever wondered how to configure Puma and Sidekiq to start when your instance boot, to ensure they are always running, and to collect their logs, this is how you do it: using `systemd`.
+If you ever wondered how to configure Puma and Sidekiq to start when your instance boot, to ensure they are always running, and to collect their logs, this is how you do it: using `systemd`. If you tell Railway to create a web server, it will install the Puma unit file. If you tell it to create a worker server, it will install the Sidekiq unit file. 
 
 

@@ -1,7 +1,7 @@
 ---
 
-- import_playbook: ami_aws_setup.yml
-- import_playbook: ami_bootstrap.yml
-- import_playbook: ami_packages.yml
+#- import_playbook: ami_aws_setup.yml
+#- import_playbook: ami_bootstrap.yml
+#- import_playbook: ami_packages.yml
 - import_playbook: ami_app.yml
 - import_playbook: ami_aws_snapshot.yml

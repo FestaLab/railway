@@ -1,9 +1,9 @@
 ---
-vault_aws_access_key: VALUE
-vault_aws_secret_key: VALUE
+vault_aws_access_key: AKIAZ7WGPDYCSL2XG4VR
+vault_aws_secret_key: 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
 
-vault_aws_rds_username: VALUE
-vault_aws_rds_password: VALUE
-vault_aws_rds_database: VALUE
+vault_aws_rds_username: pre7idy8ax7hxo48yt9ttvdvcbwv
+vault_aws_rds_password: sbg31izxd3chtbaesiqv5oxh79bn
+vault_aws_rds_database: az6nd9reqit1fzkkaxkl8qzim894
 
-vault_aws_certificate_arn: VALUE
+vault_aws_certificate_arn: arn:aws:acm:us-east-1:686537252357:certificate/44495369-9f7c-43fa-b926-43ef0a846040
