@@ -76,20 +76,10 @@
 
 
 
-    - name: Copy the development master key credentials folder
-      copy:
-        src: roles/app_bootstrap/files/development/master.key
-        dest: ../railway-credentials/development_master.key
-
     - name: Remove the development master.key
       file:
         path: roles/app_bootstrap/files/development/master.key
         state: absent
-
-    - name: Copy the production master key credentials folder
-      copy:
-        src: roles/app_bootstrap/files/production/master.key
-        dest: ../railway-credentials/production_master.key
 
     - name: Remove the production master.key
       file:

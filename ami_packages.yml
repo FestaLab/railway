@@ -55,6 +55,9 @@
     - role: ami_libjxl
       tags: libjxl
 
+    - role: ami_mozjpeg
+      tags: libjxl
+
     - role: ami_imagemagick
       tags: imagemagick
 

@@ -1,9 +1,9 @@
 ---
-vault_aws_access_key: VALUE
-vault_aws_secret_key: VALUE
+vault_aws_access_key: 
+vault_aws_secret_key: 
 
-vault_aws_rds_username: VALUE
-vault_aws_rds_password: VALUE
-vault_aws_rds_database: VALUE
+vault_aws_rds_username: 
+vault_aws_rds_password: 
+vault_aws_rds_database: 
 
-vault_aws_certificate_arn: VALUE
+vault_aws_certificate_arn: 
