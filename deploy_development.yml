@@ -9,7 +9,7 @@
   roles:
     - role: app_deploy
       param_name: "dev{{ group_id }}"
-      param_branch: "{{ branch | default('master') }}"
+      param_branch: "{{ branch | default('main') }}"
       tags: app_deploy
 
 - hosts: _railway_ec2_development_webserver
