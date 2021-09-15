@@ -27,7 +27,7 @@ ansible_override_sidekiq_config: true
 ansible_override_database_config: true
 ansible_use_static_build_for_ffmpeg: false
 ansible_build_image_libs: false
-config_vips_version: 8.11.0
-config_imagemagick_version: 7.0.11-14
-config_libjxl_version: 0.3.7
+config_vips_version: 8.11.3
+config_imagemagick_version: 7.1.0-6
+config_libjxl_version: 0.5
 config_mozjpeg_version: 4.0.3
