@@ -29,6 +29,7 @@
     health_check_protocol: http
     health_check_timeout: 5
     healthy_threshold_count: 5
+    deregistration_delay_timeout: 15
     modify_targets: "{{ targets is defined }}"
     name: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_name }}"
     port: "{{ param_port }}"

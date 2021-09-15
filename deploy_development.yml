@@ -28,6 +28,7 @@
 
     - role: app_deploy_application_server_restart
       param_name: "dev{{ group_id }}"
+      param_group: "{{ group_id }}"
       tags: app_deploy_application_server_restart
 
 - hosts: _railway_ec2_development_worker

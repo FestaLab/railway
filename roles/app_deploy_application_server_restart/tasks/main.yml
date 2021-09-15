@@ -1,6 +1,32 @@
 ---
 
+- name: Get aws instance ID to use in rbenv-vars
+  shell: ec2metadata --instance-id
+  register: aws_instance_id_return
+
+- set_fact:
+    aws_instance_id: "{{ aws_instance_id_return.stdout }}"
+
+- name: Deregister {{ aws_instance_id }} from {{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_group }}
+  community.aws.elb_target:
+    region: "{{ aws_region }}"
+    target_group_name: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_group }}"
+    target_id: "{{ aws_instance_id }}"
+    target_status: "unused"
+    state: absent
+  when: ansible_environment == 'production'
+
 - name: Restart puma service
   service:
     name: puma_{{ param_name }}
     state: restarted
+
+- name: Register {{ aws_instance_id }} on {{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_group }}
+  community.aws.elb_target:
+    region: "{{ aws_region }}"
+    target_group_name: "{{ app_name }}-alb-tg-{{ ansible_environment }}-{{ param_group }}"
+    target_id: "{{ aws_instance_id }}"
+    target_status: "healthy"
+    state: present
+  when: ansible_environment == 'production'
+

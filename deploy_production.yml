@@ -41,6 +41,7 @@
   roles:
     - role: app_deploy_application_server_restart
       param_name: production
+      param_group: "{{ group_id|default(0) }}"
       tags: app_deploy_application_server_restart
 
 - hosts: _railway_ec2_production_worker
