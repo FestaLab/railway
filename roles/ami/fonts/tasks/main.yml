@@ -1,0 +1,52 @@
+---
+
+- name: Install fontconfig
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - fontconfig
+      - fontconfig-config
+
+- name: Blacklist the default dejavu font
+  copy:
+    src: "70-no-dejavu.conf"
+    dest: /home/app/.config/fontconfig/conf.d/
+    owner: app
+    mode: 0755
+
+- name: Increase preference of emoji fonts
+  copy:
+    src: "69-emoji.conf"
+    dest: /home/app/.config/fontconfig/conf.d/
+    owner: app
+    mode: 0755
+
+- name: Create custom font directory
+  file:
+    path: /home/app/.fonts
+    state: directory
+    mode: 0755
+
+- name: Add Noto Color Emojis
+  copy:
+    src: NotoColorEmoji.ttf
+    dest: /home/app/.fonts/
+    mode: 0755
+
+- name: Add Noto Regular Emojis
+  copy:
+    src: NotoEmoji-Regular.ttf
+    dest: /home/app/.fonts/
+    mode: 0755
+
+- name: Install japanese fonts
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - fonts-takao-mincho

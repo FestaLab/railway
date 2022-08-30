@@ -9,3 +9,9 @@
     - role: app_bootstrap
       param_name: "{{ app_name }}"
       tags: app_bootstrap
+
+  post_tasks:
+    - name: Cleanup
+      file:
+        path: /home/app/{{ app_name }}
+        state: absent

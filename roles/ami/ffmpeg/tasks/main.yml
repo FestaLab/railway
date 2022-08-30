@@ -1,0 +1,22 @@
+---
+
+- name: Uninstall ffmpeg
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - ffmpeg
+
+- name: Download Static Build
+  unarchive:
+    src: https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+    dest: ~/
+    remote_src: True
+
+- name: Move the binary
+  command: mv ~/ffmpeg-5.0.1-amd64-static/{{ item }} /usr/local/bin
+  with_items:
+    - ffmpeg
+    - ffprobe

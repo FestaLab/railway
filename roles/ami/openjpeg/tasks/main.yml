@@ -1,0 +1,30 @@
+---
+
+- name: Download openjpeg
+  unarchive:
+    src: https://github.com/uclouvain/openjpeg/archive/refs/tags/v{{ config_openjpeg_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Create build folder
+  file:
+    path: ~/openjpeg-{{ config_openjpeg_version }}/build
+    state: directory
+    owner: app
+    mode: 0755
+
+- name: Compile openjpeg
+  command: "{{ item }}"
+  args:
+    chdir: ~/openjpeg-{{ config_openjpeg_version }}/build
+  with_items:
+    - "cmake .. -DCMAKE_BUILD_TYPE=Release"
+    - make
+    - make install
+
+- name: Cleanup
+  file:
+    path: ~/openjpeg-{{ config_openjpeg_version }}
+    state: absent
+    owner: app
+    mode: 0755

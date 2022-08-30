@@ -1,0 +1,23 @@
+---
+
+- name: Download OpenSSL
+  unarchive:
+    src: https://openssl.org/source/openssl-1.1.1q.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Compile and Install OpenSSL
+  command: "{{ item }}"
+  args:
+    chdir: ~/openssl-1.1.1q
+  with_items:
+    - ./config --openssldir=/usr/local/ssl
+    - make
+    - make test
+    - make install
+#    - ldconfig /usr/local/lib
+
+- name: Cleanup
+  file:
+    path: ~/openssl-1.1.1q
+    state: absent

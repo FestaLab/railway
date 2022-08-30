@@ -1,0 +1,12 @@
+---
+
+- name: Install rust
+  shell: curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+- name: Create link
+  file:
+    src: ~/.cargo/bin/cargo
+    dest: /usr/bin/cargo
+    owner: app
+    group: app
+    state: link

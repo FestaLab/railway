@@ -1,0 +1,12 @@
+---
+
+- name: Install postgres client
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - postgresql-client-{{ config_postgres_version }}
+      - postgresql-server-dev-{{ config_postgres_version }}
+      - postgresql-{{ config_postgres_version }}-repack

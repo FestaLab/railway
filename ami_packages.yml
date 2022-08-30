@@ -3,67 +3,96 @@
 - hosts: _railway_ec2_development_ami
   remote_user: ansible
   become: yes
+
+  pre_tasks:
+    - name: Set cflags and pkgconfig for all build scripts
+      lineinfile:
+        dest: "/etc/environment"
+        state: present
+        regexp: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value}}"
+      with_items:
+        - key: CFLAGS
+          value: -O3
+        - key: CXXFLAGS
+          value: -O3
+
   roles:
-    - role: ami_repos
-      tags: repos
+    - role: ami/purge_services
+      tags: ami_purge_services
 
-    - role: ami_dist_upgrade
-      tags: dist_upgrade
+    - role: ami/time
+      tags: ami_time
 
-    - role: ami_time
-      tags: time
+    - role: ami/cron
+      tags: ami_cron
 
-    - role: ami_cron
-      tags: cron
+    - role: ami/ufw
+      tags: ami_ufw
 
-    - role: ami_ufw
-      tags: ufw
+    - role: ami/ssh
+      tags: ami_ssh
 
-    - role: ami_ssh
-      tags: ssh
+    - role: ami/buildtools
+      tags: ami_buildtools
 
-    - role: ami_collectd
-      tags: collectd
+    - role: ami/python
+      tags: ami_python
 
-    - role: ami_purge_services
-      tags: purge_services
+    - role: ami/rust
+      tags: ami_rust
 
-    - role: ami_buildtools
-      tags: buildtools
+    - role: ami/node
+      tags: ami_node
 
-    - role: ami_python
-      tags: python
+    - role: ami/redis
+      tags: ami_redis
 
-    - role: ami_node
-      tags: node
+    - role: ami/postgres
+      tags: ami_postgres
 
-    - role: ami_postgres
-      tags: postgres
+    - role: ami/sqlite
+      tags: ami_sqlite
 
-    - role: ami_fonts
-      tags: fonts
+    - role: ami/ffmpeg
+      tags: ami_ffmpeg
 
-    - role: ami_chrome
-      tags: chrome
+    - role: ami/pdf
+      tags: ami_pdf
 
-    - role: ami_ffmpeg
-      tags: ffmpeg
+    - role: ami/libjxl
+      tags: ami_libjxl
 
-    - role: ami_pdf
-      tags: pdf
+    - role: ami/libheif
+      tags: ami_libheif
 
-    - role: ami_libjxl
-      tags: libjxl
+    - role: ami/libspng
+      tags: ami_libspng
 
-    - role: ami_mozjpeg
-      tags: libjxl
+    - role: ami/mozjpeg
+      tags: ami_mozjpeg
 
-    - role: ami_imagemagick
-      tags: imagemagick
+    - role: ami/openjpeg
+      tags: ami_openjpeg
 
-    - role: ami_libvips
-      tags: libvips
+    - role: ami/imagemagick
+      tags: ami_imagemagick
 
-    - role: ami_ruby
+    - role: ami/libvips
+      tags: ami_libvips
+
+    - role: ami/chrome
+      tags: ami_chrome
+
+    - role: ami/ruby
       param_version: "{{ ruby_version }}"
-      tags: ruby
+      tags: ami_ruby
+
+    - role: aws/cloudwatch
+      param_nam/: "{{ ansible_environment }}"
+      param_hostname: ami
+      param_process_type: ami
+      tags: aws_cloudwatch
+
+    - role: ami/dist_upgrade
+      tags: ami_dist_upgrade

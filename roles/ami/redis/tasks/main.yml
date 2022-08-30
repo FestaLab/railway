@@ -1,0 +1,26 @@
+---
+
+- name: Download redis
+  unarchive:
+    src: http://download.redis.io/redis-stable.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Compile Redis
+  command: make
+  environment:
+    BUILD_WITH_SYSTEMD: yes
+    USE_SYSTEMD: yes
+  args:
+    chdir: ~/redis-stable
+
+- name: Install Redis
+  command: mv ~/redis-stable/src/{{ item }} /usr/local/bin
+  with_items:
+    - redis-server
+    - redis-cli
+
+- name: Cleanup
+  file:
+    path: ~/redis-stable
+    state: absent
