@@ -4,7 +4,7 @@ Before we start, let's set some expectations: **this is not going to be easy**. 
 
 This is why I'll suggest that you use the [railway-app](https://github.com/FestaLab/railway_app) for your first deploy to AWS. It's a small rails app that has just enough functionality to ensure all parts of the setup are working. This way you can be sure that any problems you run into are related to Ansible or AWS, not something in your app that you forgot to configure in your app.
 
-Also, this is not going to be cheap and it most definitely won't fit the free tier. This project is supposed to handle the devops of production app that. If you bring up both development and production environments, we are talking about, at a minimum, 6 EC2, 3 RDS, 4 elasticache, 2 Load Balancer, plus Cloudwatch.
+Also, this is not going to be cheap and it most definitely won't fit the free tier. This project is supposed to handle the devops of production app that.
 
 Finally, if you are only checking Railway out of curiosity and would prefer to not have to uninstall everything by hand later, I recommend using Vagrant. In fact, everything I've written in these guides, I tested in a Vagrant box using `ubuntu/focal64`.
 
@@ -249,7 +249,7 @@ aws_backup_bucket: railway-rds-backups
 #### 5.6 Insert and protect your deploy key
 Now we are going to start using the vaults and Ansible's file encryption to secure our keys and credentials.
 
-In the folder `roles -> ansible_credentials -> app_bootstrap -> files` you will find two folders named `development` and `production` with an empty file called `deploy_id_rsa` inside.
+In the folder `roles -> app_bootstrap -> files` you will find two folders named `development` and `production` with an empty file called `deploy_id_rsa` inside.
 
 Copy the content of the **private** deploy key you created on step 3 to BOTH of them. I know this sounds weird but there is a reason for that: every time you execute an Ansible playbook, it will ask for the password of the vault. It will then also use that password to decrypt every encrypted file it encounters. Since we are going to use different passwords for development and production, we also need to have the deploy key encrypted with two different password.
 
@@ -264,8 +264,8 @@ ansible-vault encrypt roles/app_bootstrap/files/production/deploy_id_rsa
 In the folder `roles -> aws_ec2_create -> files` you will find two empty `.pem` files. Replace them with the EC2 keys we created in step 3.2, and encrypt them.
 
 ```shell
-ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-development.pem
-ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-production.pem
+ansible-vault encrypt roles/aws/ec2_create/files/ansible-ec2-development.pem
+ansible-vault encrypt roles/aws/ec2_create/files/ansible-ec2-production.pem
 ```
 
 #### 5.8 Insert and protect the credentials of the IAM users and the certificate ARN
@@ -299,11 +299,11 @@ ansible-vault encrypt roles/app_bootstrap/files/production/master.key
 ```
 
 #### 5.10 Get the ID of the base Ubuntu LTS ami in your region
-Go to `EC2 -> Launch Instance` and find the option that says "Ubuntu Server 20.04 LTS (HVM), SSD Volume Type". Right next to it are two AMI ids, one for x86 and one for ARM. Grab the x86 one. Currently, in US-EAST-1, that's `ami-09e67e426f25ce0d7`.
+Go to `EC2 -> Launch Instance` and find the option that says "Ubuntu Server 22.04 LTS (HVM), SSD Volume Type". Right next to it are two AMI ids, one for x86 and one for ARM. Grab the x86 one. Currently, in US-EAST-1, that's `ami-09e67e426f25ce0d7`.
 
 Next, go into the global vars file of this project, located in `group_vars -> all -> vars`, and update the `aws_ami_id` var.
 ```shell
-aws_ami_id: ami-09e67e426f25ce0d7
+aws_ami_id: ami-08c40ec9ead489470
 ```
 
 ### STEP 6: Run the bootstrap playbooks

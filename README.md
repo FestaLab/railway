@@ -17,7 +17,7 @@ To make all this work it makes some strong assumptions about the rails app it wi
 4. Postgres as database;
 5. Node/Yarn for javascript;
 6. [Majestic Monolith](https://m.signalvnoise.com/the-majestic-monolith/) instead of Microservices;
-7. Ubuntu 20.04;
+7. Ubuntu 22.04;
 8. No containers;
 
 It relies the following services in AWS:
@@ -43,7 +43,7 @@ I've always been a fan of those "choose your own adventure" game books, so let's
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/FestaLab/railway. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/FestaLab/railway/blob/main/CODE_OF_CONDUCT.md).
 
-If you with to submit pull requests, please check the [contribution guide](https://github.com/FestaLab/railway/blob/main/docs/CONTRIBUTION.MD) to make handling your credentials easier.
+If you with to submit pull requests, please check the [contribution guide](https://github.com/FestaLab/railway/blob/main/docs/CONTRIBUTE.MD) to make handling your credentials easier.
 
 ## License
 

@@ -12,7 +12,7 @@
       register: register_instance_info
 
   roles:
-    - role: aws/ami_create
+    - role: ami/snapshot
       param_name: ami
       param_instance_id: "{{ register_instance_info.instances[0].instance_id }}"
       tags: aws_ami_create

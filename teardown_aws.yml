@@ -28,7 +28,7 @@
       param_name: "job"
       tags: aws_elasticache_destroy
 
-    - role: aws_ec2_destroy
+    - role: aws/ec2_destroy
       param_instance_id: "{{ ec2_instances }}"
       tags: aws_elasticache_destroy
 

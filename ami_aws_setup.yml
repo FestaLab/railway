@@ -4,9 +4,9 @@
   gather_facts: False
 
   roles:
-    - role: aws_ec2_create
+    - role: aws/ec2_create
       param_name: ami
-      param_instance_type: c5.2xlarge
+      param_instance_type: m6i.2xlarge
       param_ami_id: "{{ aws_ami_id }}"
       param_exact_count: 1
       tags: aws_ec2_create

@@ -11,7 +11,7 @@
   args:
     chdir: ~/libspng-{{ config_libspng_version }}
   with_items:
-    - meson build
+    - meson build --buildtype=release
 
 - name: Compile libspng
   command: "{{ item }}"
@@ -19,6 +19,7 @@
     chdir: ~/libspng-{{ config_libspng_version }}/build
   with_items:
     - ninja
+    - ninja test
     - ninja install
 
 - name: Cleanup

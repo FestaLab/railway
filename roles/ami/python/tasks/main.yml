@@ -13,3 +13,5 @@
       - boto3
       - botocore
       - psycopg2-binary
+      - ninja
+      - meson==0.61

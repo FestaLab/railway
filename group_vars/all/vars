@@ -4,7 +4,7 @@
 aws_postgres_version: "14"
 aws_postgres_version_id: postgres14
 aws_region: us-east-1
-aws_ami_id: ami-0edc92075724775f7
+aws_ami_id: ami-08c40ec9ead489470
 aws_backup_bucket: railway-rds-backups
 
 # Redis
@@ -27,13 +27,14 @@ app_name: railway
 app_host: railway.festalab.com.br
 
 # Ansible stuff
-config_vips_version: 8.13.0
-config_imagemagick_version: 7.1.0-45
-config_libjxl_version: 0.6.1
-config_libheif_version: 1.12.0
+config_vips_version: 8.13.3
+config_imagemagick_version: 7.1.0-50
+config_libjxl_version: main
+config_libheif_version: 1.14.0
 config_libspng_version: 0.7.2
-config_openjpeg_version: 2.4.0
-config_mozjpeg_version: 4.0.3
+config_openjpeg_version: 2.5.0
+config_mozjpeg_version: 4.1.1
 config_node_version: 16
 config_postgres_version: 14
 config_postgres_repack_version: 1.4.7
+config_wkhtmltopdf_version: 0.12.6.1-2

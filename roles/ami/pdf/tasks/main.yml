@@ -1,5 +1,19 @@
 ---
 
+- name: Download wkhtmltopdf
+  get_url:
+    url: https://github.com/wkhtmltopdf/packaging/releases/download/{{ config_wkhtmltopdf_version }}/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+    dest: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+
+- name: Install wkhtmltopdf
+  apt:
+    deb: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+
+- name: Cleanup
+  file:
+    path: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+    state: absent
+
 - name: Install PDF libs
   apt:
     name: "{{ packages }}"
@@ -20,5 +34,4 @@
     update_cache: False
   vars:
     packages:
-      - wkhtmltopdf
       - poppler-utils

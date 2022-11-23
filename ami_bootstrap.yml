@@ -7,17 +7,28 @@
 
   roles:
 
-    - role: ami_user
+    - role: ami/ulimit
+      tags: ulimit
+
+    - role: ami/dist_upgrade
+      tags: ami_dist_upgrade
+
+    - role: ami/repos
+      tags: ami_repos
+
+    - role: ami/log
+      tags: ami_log
+
+    - role: ami/user
       param_name: ansible
       param_comment: Ansible user
       param_sudo: yes
       tags: ansible_user
 
-    - role: ami_user
+    - role: ami/user
       param_name: app
       param_comment: Application user
       param_sudo: yes
       tags: user_app
 
-    - role: ami_ulimit
-      tags: ulimit
+

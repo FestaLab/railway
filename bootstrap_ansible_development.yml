@@ -14,7 +14,7 @@
 
     - name: Copy ec2 development key to local ssh folder
       copy:
-        src: "roles/aws_ec2_create/files/ansible-ec2-development.pem"
+        src: "roles/aws/ec2_create/files/ansible-ec2-development.pem"
         dest: ~/.ssh/ansible-ec2-development.pem
         mode: 0600
 

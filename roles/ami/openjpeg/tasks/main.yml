@@ -20,7 +20,7 @@
   with_items:
     - "cmake .. -DCMAKE_BUILD_TYPE=Release"
     - make
-    - make install
+    - "make install"
 
 - name: Cleanup
   file:

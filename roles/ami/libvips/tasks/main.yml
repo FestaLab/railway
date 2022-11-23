@@ -6,14 +6,21 @@
     dest: ~/
     remote_src: True
 
-- name: Compile vips
+- name: Create vips build
   command: "{{ item }}"
   args:
     chdir: ~/vips-{{ config_vips_version }}
   with_items:
-    - ./configure
-    - make
-    - make install
+    - meson setup build --buildtype=release
+
+- name: Compile vips
+  command: "{{ item }}"
+  args:
+    chdir: ~/vips-{{ config_vips_version }}/build
+  with_items:
+    - ninja
+    - ninja test
+    - ninja install
 
 - name: Cleanup
   file:

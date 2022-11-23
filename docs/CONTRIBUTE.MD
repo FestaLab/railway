@@ -9,9 +9,9 @@ ansible-playbook contribute_bootstrap.yml
 ```
 
 This playbook will:
-1 - Create a `railway-credentials` folder in the same folder that you clone `railway` to;
-2 - Make a copy of the placeholder development vault to `railway-credentials`;
-3 - Make a copy of the placeholder production vault to `railway-credentials`;
+1. Create a `railway-credentials` folder in the same folder that you cloned `railway` to;
+2. Make a copy of the placeholder development vault to `railway-credentials`;
+3. Make a copy of the placeholder production vault to `railway-credentials`;
 
 With this done, you can now go through STEP 5 of the INSTALL.MD file to get your credentials inserted.
 
@@ -22,14 +22,14 @@ ansible-playbook contribute_teardown.yml
 ```
 
 This playbook will:
-1 - Copy your current development vault to `railway-credentials`;
-2 - Copy the placeholder development vault back to this project;
-3 - Copy your current production vault to `railway-credentials`;
-4 - Copy the placeholder production vault back to this project;
-5 - Copy your current development key pair to `railway-credentials`;
-6 - Clear the development key pair file;
-7 - Copy your current development key pair to `railway-credentials`;
-8 - Clear the development key pair file;
+1. Copy your current development vault to `railway-credentials`;
+2. Copy the placeholder development vault back to this project;
+3. Copy your current production vault to `railway-credentials`;
+4. Copy the placeholder production vault back to this project;
+5. Copy your current development key pair to `railway-credentials`;
+6. Clear the development key pair file;
+7. Copy your current development key pair to `railway-credentials`;
+8. Clear the development key pair file;
 
 Then also run the teardown playbook to AWS, so it removes every resource that costs money:
 ```shell

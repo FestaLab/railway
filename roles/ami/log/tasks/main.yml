@@ -1,0 +1,41 @@
+---
+
+# Use the command below to debug errors
+# logrotate /etc/logrotate.d/rsyslog --debug
+
+# Global logrotate
+- lineinfile:
+      dest: "/etc/logrotate.conf"
+      state: present
+      regexp: "weekly"
+      line: "daily"
+
+- lineinfile:
+      dest: "/etc/logrotate.conf"
+      state: present
+      regexp: "rotate 4"
+      line: "rotate 2"
+
+ # Syslog logrotate
+- lineinfile:
+      dest: "/etc/logrotate.d/rsyslog"
+      state: present
+      regexp: "weekly"
+      line: "        daily"
+
+- lineinfile:
+      dest: "/etc/logrotate.d/rsyslog"
+      state: present
+      regexp: "rotate 4"
+      line: "        rotate 2"
+
+- lineinfile:
+      dest: "/etc/logrotate.d/rsyslog"
+      state: absent
+      regexp: "su root admin"
+
+- lineinfile:
+      dest: "/etc/logrotate.d/rsyslog"
+      state: present
+      regexp: "{"
+      line: "{\n        su root adm"

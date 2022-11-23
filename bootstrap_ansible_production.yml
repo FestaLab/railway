@@ -6,7 +6,7 @@
 
     - name: Copy ec2 production key to local ssh folder
       copy:
-        src: "roles/aws_ec2_create/files/ansible-ec2-production.pem"
+        src: "roles/aws/ec2_create/files/ansible-ec2-production.pem"
         dest: ~/.ssh/ansible-ec2-production.pem
         mode: 0600
 

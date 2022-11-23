@@ -99,7 +99,7 @@ What makes it confusing is that Heroku creates and destroys instances so frequen
 It is perfectly fine to keep your servers around: 
 - Railway has a playbook that you can run once in a while to update your servers without taking your app offline;
 - Logs are handled by `systemd` which imposes a limit on how much disk space they can use;
-- The EC2 instances you will use have 2x (`c5`) or 4x (`m5`) more memory than `standard-2x` dynos and `jemalloc` pre installed, which should eliminate any memory related problems (unless your app has some serious leak);
+- The EC2 instances you will use have 2x (`c6i`) or 4x (`m6i`) more memory than `standard-2x` dynos and `jemalloc` pre installed, which should eliminate any memory related problems (unless your app has some serious leak);
 
 ## Load Balancer
 Any production grade app should be running on at least two web servers so that if one fails, the other can keep serving requests while you solve the problem. Or, something that is much more probable: so that when you restart puma in one server during a deploy, the other keeps serving requests. This means that if you want requests to be distributed between all servers you have running, you will need something between them and the rest of the world. That's where the load balancer comes in.

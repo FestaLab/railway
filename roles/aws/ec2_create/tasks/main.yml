@@ -17,7 +17,7 @@
 - name: Provisioning {{ param_exact_count }} {{ param_instance_type }} instance(s) tagged as {{ app_name }}-ec2-{{ ansible_environment }}-{{ param_name }}
   amazon.aws.ec2:
     assign_public_ip: yes
-    key_name: "ansible-ec2-development"
+    key_name: "ansible-ec2-{{ ansible_environment }}"
     instance_type: "{{ param_instance_type }}"
     image: "{{ param_ami_id }}"
     instance_profile_name: "{{ app_name }}-iam-ec2-role"

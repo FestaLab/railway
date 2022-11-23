@@ -18,13 +18,12 @@
       - default-jre
       - gcc
       - gnupg2
-      - libaom0
+      - libaom3
       - libde265-0
       - libsystemd-dev
       - libtool
       - lsb-release
       - make
-      - meson
       - nasm
       - pkg-config
       - shared-mime-info
@@ -52,6 +51,7 @@
       - libffi-dev
       - libfftw3-dev
       - libgif-dev
+      - libgirepository1.0-dev
       - libglib2.0-dev
       - libgsf-1-dev
       - libgsf-1-dev
@@ -75,4 +75,5 @@
       - libxml2-dev
       - libxslt1-dev
       - libyaml-dev
+      - libzstd-dev
       - zlib1g-dev

@@ -24,12 +24,12 @@
     - name: Copy development EC2 key pair to the project
       copy:
         src: ../railway-credentials/ansible-ec2-development.pem
-        dest: roles/aws_ec2_create/files/ansible-ec2-development.pem
+        dest: roles/aws/ec2_create/files/ansible-ec2-development.pem
 
     - name: Copy production EC2 key pair to the project
       copy:
         src: ../railway-credentials/ansible-ec2-production.pem
-        dest: roles/aws_ec2_create/files/ansible-ec2-production.pem
+        dest: roles/aws/ec2_create/files/ansible-ec2-production.pem
 
 
     - name: Copy the development deploy key to the project
