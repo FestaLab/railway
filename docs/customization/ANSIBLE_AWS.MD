@@ -14,7 +14,7 @@ aws_redis_port: 6379
 aws_postgres_version: "13"
 aws_postgres_version_id: postgres13
 aws_region: us-east-1
-aws_ami_id: ami-09e67e426f25ce0d7
+aws_ami_id: ami-08c40ec9ead489470
 
 # Ruby
 ruby_version: 3.0.1
@@ -40,7 +40,7 @@ The entries here should be self explanatory. They will tell Ansible which versio
 
 1. The Ansible module for Elasticache does not support version 6 yet;
 2. The AMI we create will come with the client for version 13 installed. If you change it here, you must change it there too;
-3. I have only tested these playbooks on Ubuntu 20.04, so I'm not sure if they will work on another version. I'm 100% sure they will not work on another distro (like CentOS);
+3. I have only tested these playbooks on Ubuntu 22.04, so I'm not sure if they will work on another version. I'm 100% sure they will not work on another distro (like CentOS);
 
 #### Ruby
 I've only tested the compilation of `3.0.1` in this project, but I have no reason to believe you would have any trouble with others. No matter the version you choose, Ansible will ensure its installed with `jemalloc`, which should greatly reduce your memory usage.

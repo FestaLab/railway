@@ -1,0 +1,14 @@
+Port 22
+AddressFamily any
+ListenAddress 0.0.0.0
+ListenAddress ::
+
+AllowUsers ubuntu ansible app nginx metabase retool
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+PermitRootLogin no
+UsePAM yes
+
+Protocol 2
+Subsystem       sftp    /usr/lib/openssh/sftp-server
+UseDNS no

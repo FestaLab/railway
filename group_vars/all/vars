@@ -1,17 +1,22 @@
 ---
 
 # AWS
-aws_redis_version: "5.0"
-aws_redis_version_id: "redis5.0"
-aws_redis_port: 6379
-aws_postgres_version: "13"
-aws_postgres_version_id: postgres13
+aws_postgres_version: "14"
+aws_postgres_version_id: postgres14
 aws_region: us-east-1
-aws_ami_id: ami-09e67e426f25ce0d7
+aws_ami_id: ami-08c40ec9ead489470
 aws_backup_bucket: railway-rds-backups
 
+# Redis
+redis_job_port: 6379
+redis_job_maxmemory_policy: noeviction
+redis_cache_port: 6380
+redis_cache_maxmemory_policy: allkeys-lfu
+redis_kredis_port: 6381
+redis_kredis_maxmemory_policy: allkeys-lfu
+
 # Ruby
-ruby_version: 3.0.1
+ruby_version: 3.1.2
 
 # Github
 github_repository_url: git@github.com:FestaLab/railway-app.git
@@ -22,12 +27,14 @@ app_name: railway
 app_host: railway.festalab.com.br
 
 # Ansible stuff
-ansible_override_puma_config: true
-ansible_override_sidekiq_config: true
-ansible_override_database_config: true
-ansible_use_static_build_for_ffmpeg: false
-ansible_build_image_libs: false
-config_vips_version: 8.11.3
-config_imagemagick_version: 7.1.0-6
-config_libjxl_version: 0.5
-config_mozjpeg_version: 4.0.3
+config_vips_version: 8.13.3
+config_imagemagick_version: 7.1.0-50
+config_libjxl_version: main
+config_libheif_version: 1.14.0
+config_libspng_version: 0.7.2
+config_openjpeg_version: 2.5.0
+config_mozjpeg_version: 4.1.1
+config_node_version: 16
+config_postgres_version: 14
+config_postgres_repack_version: 1.4.7
+config_wkhtmltopdf_version: 0.12.6.1-2

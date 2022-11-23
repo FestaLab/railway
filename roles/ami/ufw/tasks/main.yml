@@ -1,0 +1,31 @@
+---
+
+- name: Install ufw
+  apt:
+    name: ufw
+    state: present
+    update_cache: False
+
+- name: Copy ufw configuration 
+  copy:
+    src: "{{ item }}"
+    dest: /etc/ufw/{{ item }} 
+    force: yes
+  with_items:
+      - user.rules 
+      - user6.rules
+  notify: Reload ufw    
+
+- name: Enable ufw
+  ufw:
+    state: enabled
+
+- name: Enable ufw service
+  service:
+    name: ufw
+    enabled: yes
+
+- name: Start ufw service
+  service:
+    name: ufw
+    state: started  

@@ -12,11 +12,11 @@
       register: register_instance_info
 
   roles:
-
-    - role: aws_ami_create
+    - role: ami/snapshot
+      param_name: ami
       param_instance_id: "{{ register_instance_info.instances[0].instance_id }}"
       tags: aws_ami_create
 
-    - role: aws_ec2_destroy
+    - role: aws/ec2_destroy
       param_instance_id: "{{ register_instance_info.instances[0].instance_id }} "
       tags: aws_ec2_destroy

@@ -80,7 +80,7 @@ If you open `ami.yml` this is what you will see:
 Once again, if you don't care how this will happen, skip to 2.6. If you are actually interested in everything that goes into building a custom AMI, read on.
 
 #### 2.1 Setup
-Creates an EC2 instance using the base Ubuntu 20.04 LTS.
+Creates an EC2 instance using the base Ubuntu 22.04 LTS.
 1. Find the subnet for the development environment;
 2. Find the security group for the development environment;
 3. Provision an EC2 instance with the name `railway-ec2-development-ami` using the `development` key pair;

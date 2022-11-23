@@ -1,0 +1,37 @@
+---
+
+- name: Download wkhtmltopdf
+  get_url:
+    url: https://github.com/wkhtmltopdf/packaging/releases/download/{{ config_wkhtmltopdf_version }}/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+    dest: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+
+- name: Install wkhtmltopdf
+  apt:
+    deb: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+
+- name: Cleanup
+  file:
+    path: ~/wkhtmltox_{{ config_wkhtmltopdf_version }}.jammy_amd64.deb
+    state: absent
+
+- name: Install PDF libs
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - xvfb
+      - libfontconfig
+      - libpoppler-glib-dev
+      - libpoppler-glib8
+      - libpoppler-dev
+
+- name: Install PDF command line tools
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - poppler-utils

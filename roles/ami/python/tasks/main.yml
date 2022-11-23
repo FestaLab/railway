@@ -1,0 +1,17 @@
+---
+
+- name: Install pip3
+  apt:
+    name: python3-pip
+    state: present
+    update_cache: False
+
+- name: Install boto packages with pip3 module
+  pip:
+    name:
+      - boto
+      - boto3
+      - botocore
+      - psycopg2-binary
+      - ninja
+      - meson==0.61

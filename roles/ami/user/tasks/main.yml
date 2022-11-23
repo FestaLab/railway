@@ -1,0 +1,39 @@
+---
+
+- name: Add user
+  user:
+    name: "{{ param_name }}"
+    create_home: true
+    state: present
+
+- name: Set comment
+  user:
+    name: "{{ param_name }}"
+    comment: "{{ param_comment }}"
+  when: param_comment != ""
+
+- name: Set shell
+  user:
+    name: "{{ param_name }}"
+    shell: "{{ param_shell }}"
+
+- name: Create .ssh directory
+  file:
+    path: ~{{ param_name }}/.ssh
+    state: directory
+    owner: "{{ param_name }}"
+    group: "{{ param_name }}"
+    mode: 0700
+
+- name: Add production key
+  authorized_key:
+    user: "{{ param_name }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/festalab_keypair_production_v2.pem.pub') }}"
+
+- name: Add sudo rights
+  copy:
+    content: "{{ param_name }} ALL=(ALL) NOPASSWD:ALL"
+    dest: /etc/sudoers.d/{{ param_name }}
+    mode: 0600
+  when: param_sudo

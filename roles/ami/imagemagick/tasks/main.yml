@@ -1,0 +1,22 @@
+---
+
+- name: Download ImageMagick
+  unarchive:
+    src: https://github.com/ImageMagick/ImageMagick/archive/refs/tags/{{ config_imagemagick_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Install ImageMagick
+  command: "{{ item }}"
+  args:
+    chdir: ~/ImageMagick-{{ config_imagemagick_version }}
+  with_items:
+    - ./configure
+    - make
+    - make install
+    - ldconfig /usr/local/lib
+
+- name: Cleanup
+  file:
+    path: ~/ImageMagick-{{ config_imagemagick_version }}
+    state: absent

@@ -1,0 +1,77 @@
+---
+
+- name: Install CLANG-12
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - clang-12
+
+- name: Register clang-12 in the environment
+  lineinfile:
+    dest: "/etc/environment"
+    state: present
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value}}"
+  with_items:
+    - key: CC
+      value: clang-12
+    - key: CXX
+      value: clang++-12
+
+- name: Download libjxl
+  unarchive:
+    src: https://gitlab.com/wg1/jpeg-xl/-/archive/{{ config_libjxl_version }}/jpeg-xl-{{ config_libjxl_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Create build folder
+  file:
+    path: ~/jpeg-xl-{{ config_libjxl_version }}/build
+    state: directory
+    owner: app
+    mode: 0755
+
+- name: Run bash script to download dependencies
+  command: ./deps.sh
+  args:
+    chdir: ~/jpeg-xl-{{ config_libjxl_version }}
+
+- name: Compile libjxl
+  command: "{{ item }}"
+  args:
+    chdir: ~/jpeg-xl-{{ config_libjxl_version }}/build
+  with_items:
+    - "cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF .."
+    - "cmake --build . -- -j{{ ansible_processor_vcpus }}"
+    - "cmake --install ."
+
+- name: Uninstall CLANG-12
+  apt:
+    name: "{{ packages }}"
+    state: absent
+    update_cache: False
+  vars:
+    packages:
+      - clang-12
+
+- name: Deregister clang-12 in the environment
+  lineinfile:
+    dest: "/etc/environment"
+    state: absent
+    regexp: "^{{ item.key }}="
+    line: "{{ item.key }}={{ item.value}}"
+  with_items:
+    - key: CC
+      value: clang-12
+    - key: CXX
+      value: clang++-12
+
+- name: Cleanup
+  file:
+    path: ~/jpeg-xl-{{ config_libjxl_version }}
+    state: absent
+    owner: app
+    mode: 0755

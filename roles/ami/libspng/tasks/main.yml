@@ -1,0 +1,28 @@
+---
+
+- name: Download libspng
+  unarchive:
+    src: https://github.com/randy408/libspng/archive/v{{ config_libspng_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Create build
+  command: "{{ item }}"
+  args:
+    chdir: ~/libspng-{{ config_libspng_version }}
+  with_items:
+    - meson build --buildtype=release
+
+- name: Compile libspng
+  command: "{{ item }}"
+  args:
+    chdir: ~/libspng-{{ config_libspng_version }}/build
+  with_items:
+    - ninja
+    - ninja test
+    - ninja install
+
+- name: Cleanup
+  file:
+    path: ~/libspng-{{ config_libspng_version }}
+    state: absent

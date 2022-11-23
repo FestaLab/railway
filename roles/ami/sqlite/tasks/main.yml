@@ -1,0 +1,11 @@
+---
+
+- name: Install sqlite
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: False
+  vars:
+    packages:
+      - sqlite3
+      - libsqlite3-dev

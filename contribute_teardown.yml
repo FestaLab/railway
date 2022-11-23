@@ -34,23 +34,23 @@
 
     - name: Copy the development EC2 key pair to the credentials folder
       copy:
-        src: roles/aws_ec2_create/files/ansible-ec2-development.pem
+        src: roles/aws/ec2_create/files/ansible-ec2-development.pem
         dest: ../railway-credentials/ansible-ec2-development.pem
 
     - name: Clear development EC2 key pair
       copy:
-        content: 'Replace this file with your development EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-development.pem"'
-        dest: roles/aws_ec2_create/files/ansible-ec2-development.pem
+        content: 'Replace this file with your development EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws/ec2_create/files/ansible-ec2-development.pem"'
+        dest: roles/aws/ec2_create/files/ansible-ec2-development.pem
 
     - name: Copy the production EC2 key pair to the credentials folder
       copy:
-        src: roles/aws_ec2_create/files/ansible-ec2-production.pem
+        src: roles/aws/ec2_create/files/ansible-ec2-production.pem
         dest: ../railway-credentials/ansible-ec2-production.pem
 
     - name: Clear production EC2 key pair
       copy:
-        content: 'Replace this file with your production EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws_ec2_create/files/ansible-ec2-production.pem"'
-        dest: roles/aws_ec2_create/files/ansible-ec2-production.pem
+        content: 'Replace this file with your production EC2 key pair and encrypt it with "ansible-vault encrypt roles/aws/ec2_create/files/ansible-ec2-production.pem"'
+        dest: roles/aws/ec2_create/files/ansible-ec2-production.pem
 
 
 

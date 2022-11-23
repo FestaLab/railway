@@ -1,0 +1,22 @@
+---
+
+- name: Download libheif
+  unarchive:
+    src: https://github.com/strukturag/libheif/archive/refs/tags/v{{ config_libheif_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Compile libheif
+  command: "{{ item }}"
+  args:
+    chdir: ~/libheif-{{ config_libheif_version }}
+  with_items:
+    - ./autogen.sh
+    - ./configure
+    - make
+    - make install
+
+- name: Cleanup
+  file:
+    path: ~/libheif-{{ config_libheif_version }}
+    state: absent

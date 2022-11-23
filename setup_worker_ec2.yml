@@ -14,7 +14,7 @@
         ami: "{{ register_ami_info.images | sort(attribute='creation_date', reverse = True) | first }}"
 
   roles:
-    - role: aws_ec2_create
+    - role: aws/ec2_create
       param_name: "worker"
       param_instance_type: "{{ infra_ec2_worker_instance_type }}"
       param_ami_id: "{{ ami.image_id }}"

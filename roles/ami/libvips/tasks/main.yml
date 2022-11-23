@@ -1,0 +1,28 @@
+---
+
+- name: Download libvips
+  unarchive:
+    src: https://github.com/libvips/libvips/releases/download/v{{ config_vips_version }}/vips-{{ config_vips_version }}.tar.gz
+    dest: ~/
+    remote_src: True
+
+- name: Create vips build
+  command: "{{ item }}"
+  args:
+    chdir: ~/vips-{{ config_vips_version }}
+  with_items:
+    - meson setup build --buildtype=release
+
+- name: Compile vips
+  command: "{{ item }}"
+  args:
+    chdir: ~/vips-{{ config_vips_version }}/build
+  with_items:
+    - ninja
+    - ninja test
+    - ninja install
+
+- name: Cleanup
+  file:
+    path: ~/vips-{{ config_vips_version }}
+    state: absent
